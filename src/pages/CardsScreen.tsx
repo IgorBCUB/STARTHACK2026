@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Plus, Snowflake, Settings, Eye, EyeOff, Copy } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import { useNestorMode } from "@/contexts/NestorModeContext";
+import NestorInsightPanel from "@/components/NestorInsightPanel";
 
 const cards = [
   {
@@ -29,11 +30,41 @@ const recentCardActivity = [
   { merchant: "Lidl", amount: "-45.87 €", date: "Yesterday", card: "Main Card" },
 ];
 
+type InsightTarget = "card-main" | "card-savings" | "spending" | null;
+
+const insightData: Record<Exclude<InsightTarget, null>, { context: string; questions: { label: string; question: string }[] }> = {
+  "card-main": {
+    context: "Main Card (Visa) – Balance: 12,026.00 €",
+    questions: [
+      { label: "¿En qué consiste el gasto de esta tarjeta?", question: "Break down the typical spending categories and patterns for this Visa card with a 12,026€ balance. What are the main expenses?" },
+      { label: "¿Estoy gastando demasiado?", question: "Analyze if spending 1,124€ out of a 2,000€ monthly limit on this card is healthy. Am I overspending?" },
+      { label: "¿Debería tener otra tarjeta?", question: "Should I consider having a second card for specific expenses? What are the pros and cons of splitting spending across cards?" },
+    ],
+  },
+  "card-savings": {
+    context: "Savings Card (Mastercard) – Balance: 3,882.00 €",
+    questions: [
+      { label: "¿Para qué debería usar esta tarjeta?", question: "What's the best strategy for using a dedicated savings card with 3,882€? Should I reserve it for specific purchases?" },
+      { label: "¿Cómo optimizar los beneficios?", question: "How can I maximize the benefits of a Mastercard savings card? What rewards or cashback programs should I look into?" },
+      { label: "¿Conviene consolidar tarjetas?", question: "Is it better to consolidate my spending into one card or keep two separate cards for different purposes?" },
+    ],
+  },
+  spending: {
+    context: "Monthly Spending – 1,124 € of 2,000 € limit used (56%)",
+    questions: [
+      { label: "¿Cómo reducir mis gastos mensuales?", question: "I've spent 1,124€ out of my 2,000€ monthly limit. What practical tips can help me reduce monthly card spending?" },
+      { label: "¿Es saludable mi límite de gasto?", question: "Is a 2,000€ monthly spending limit appropriate? How should I set my limit based on income and savings goals?" },
+      { label: "¿Qué patrones de gasto debo vigilar?", question: "What spending patterns should I watch out for? Common traps like subscriptions, impulse purchases, etc." },
+    ],
+  },
+};
+
 const CardsScreen = () => {
   const navigate = useNavigate();
   const { isNestorMode } = useNestorMode();
   const [activeCard, setActiveCard] = useState(0);
   const [showNumber, setShowNumber] = useState(false);
+  const [insightTarget, setInsightTarget] = useState<InsightTarget>(null);
 
   return (
     <div className="min-h-screen bg-background flex justify-center">
@@ -52,10 +83,16 @@ const CardsScreen = () => {
             {cards.map((card, i) => (
               <button
                 key={i}
-                onClick={() => setActiveCard(i)}
+                onClick={() => {
+                  if (isNestorMode) {
+                    setInsightTarget(i === 0 ? "card-main" : "card-savings");
+                  } else {
+                    setActiveCard(i);
+                  }
+                }}
                 className={`flex-shrink-0 w-[85%] snap-center rounded-2xl p-5 bg-gradient-to-br ${card.color} text-primary-foreground transition-all ${
                   activeCard === i ? "scale-100" : "scale-95 opacity-70"
-                } ${isNestorMode ? "opacity-40 pointer-events-none" : ""}`}
+                } ${isNestorMode ? "ring-2 ring-primary/50 animate-pulse cursor-pointer opacity-100" : ""}`}
               >
                 <div className="flex items-center justify-between mb-8">
                   <p className="text-sm font-medium opacity-80">{card.name}</p>
@@ -93,7 +130,12 @@ const CardsScreen = () => {
           </div>
 
           {/* Spending limits */}
-          <div className={`bg-secondary rounded-xl p-4 mb-6 ${isNestorMode ? "opacity-30 pointer-events-none" : ""}`}>
+          <button
+            onClick={() => isNestorMode && setInsightTarget("spending")}
+            className={`w-full text-left bg-secondary rounded-xl p-4 mb-6 transition-all ${
+              isNestorMode ? "ring-2 ring-primary/50 animate-pulse cursor-pointer" : ""
+            }`}
+          >
             <div className="flex items-center justify-between mb-2">
               <p className="text-sm font-semibold text-foreground">Monthly Spending</p>
               <p className="text-xs text-muted-foreground">1,124 € / 2,000 €</p>
@@ -101,7 +143,7 @@ const CardsScreen = () => {
             <div className="w-full h-2 rounded-full bg-muted overflow-hidden">
               <div className="h-full bg-primary rounded-full" style={{ width: "56%" }} />
             </div>
-          </div>
+          </button>
 
           {/* Recent activity */}
           <div>
@@ -122,6 +164,16 @@ const CardsScreen = () => {
 
         <BottomNav />
       </div>
+
+      {/* Nestor Insight Panel */}
+      {insightTarget && insightData[insightTarget] && (
+        <NestorInsightPanel
+          context={insightData[insightTarget].context}
+          questions={insightData[insightTarget].questions}
+          onClose={() => setInsightTarget(null)}
+          onNavigate={(route) => { setInsightTarget(null); navigate(route); }}
+        />
+      )}
     </div>
   );
 };
