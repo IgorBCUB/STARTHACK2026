@@ -128,7 +128,7 @@ const CardsScreen = () => {
                 }}
                 className={`flex-shrink-0 w-[85%] snap-center rounded-2xl p-5 bg-gradient-to-br ${card.color} text-primary-foreground transition-all ${
                   activeCard === i ? "scale-100" : "scale-95 opacity-70"
-                } ${isNestorMode ? "ring-2 ring-primary/50 animate-pulse cursor-pointer opacity-100" : ""}`}
+                } ${isNestorMode ? "ring-2 ring-primary/50 cursor-pointer opacity-100" : ""}`}
               >
                 <div className="flex items-center justify-between mb-8">
                   <p className="text-sm font-medium opacity-80">{card.name}</p>
@@ -169,7 +169,7 @@ const CardsScreen = () => {
           <button
             onClick={() => isNestorMode && setInsightTarget("spending")}
             className={`w-full text-left bg-secondary rounded-xl p-4 mb-6 transition-all ${
-              isNestorMode ? "ring-2 ring-primary/50 animate-pulse cursor-pointer" : ""
+              isNestorMode ? "ring-2 ring-primary/50 cursor-pointer" : ""
             }`}
           >
             <div className="flex items-center justify-between mb-2">
