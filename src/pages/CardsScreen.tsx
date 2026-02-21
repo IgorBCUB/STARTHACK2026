@@ -59,7 +59,7 @@ const recentCardActivity = [
   { merchant: "Lidl", amount: "-45.87 €", date: "Yesterday", card: "Main Card" },
 ];
 
-const buildCardContext = (card: typeof cards[0]) => {
+const buildAIContext = (card: typeof cards[0]) => {
   const catBreakdown = card.spending.categories.map(c => `  - ${c.name}: ${c.amount} €`).join("\n");
   return `${card.name} (${card.type}) – Saldo: ${card.balance}
 Usuario: ${userProfile.name} | Ingresos: ${userProfile.monthlyIncome} €/mes | Objetivo ahorro: ${userProfile.monthlySavingsGoal} €/mes
@@ -70,30 +70,27 @@ ${catBreakdown}`;
 
 const insightData: Record<string, { context: string; questions: { label: string; question: string }[] }> = {
   "card-0": {
-    context: buildCardContext(cards[0]),
+    context: "Main Card (Visa) – Balance: 12,026.00 €",
     questions: [
-      { label: "¿En qué estoy gastando más?", question: `Given this user's exact spending breakdown this month (Supermercados: 312€, Restaurantes/delivery: 198€, Transporte: 156€, Suscripciones: 89€, Compras online: 214€, Ocio: 155€ — total 1,124€), which categories are above average and where can they cut back? Compare with last month's 1,387€.` },
-      { label: "¿Estoy gastando demasiado?", question: `This user earns 3,200€/month and spent 1,124€ on their main card this month (vs 1,387€ last month). Their savings goal is 600€/month. Analyze if their spending is sustainable and what adjustments they should make. Be specific with numbers.` },
-      { label: "¿Cómo puedo reducir suscripciones?", question: `The user pays 89€/month in subscriptions: Netflix, Spotify, iCloud, and gym membership. Are there ways to optimize this? Shared plans, alternatives, or subscriptions they might not need? Give specific savings estimates.` },
+      { label: "¿En qué estoy gastando más?", question: `Context del usuario: ${buildAIContext(cards[0])}\n\nPregunta: ¿Cuáles son las categorías donde más gasto? Analiza el desglose y compara con el mes anterior.` },
+      { label: "¿Estoy gastando demasiado?", question: `Context del usuario: ${buildAIContext(cards[0])}\n\nPregunta: Con mis ingresos y objetivo de ahorro, ¿estoy gastando demasiado? Sé específico con los números.` },
+      { label: "¿Cómo puedo reducir suscripciones?", question: `Context del usuario: ${buildAIContext(cards[0])}\n\nPregunta: Pago 89€/mes en suscripciones (Netflix, Spotify, iCloud, gym). ¿Cómo puedo optimizar esto? Da estimaciones concretas de ahorro.` },
     ],
   },
   "card-1": {
-    context: buildCardContext(cards[1]),
+    context: "Savings Card (Mastercard) – Balance: 3,882.00 €",
     questions: [
-      { label: "¿Estoy ahorrando suficiente?", question: `The user has 3,882€ in their savings card and invests 150€/month in ETFs with a 600€/month savings goal. They earn 3,200€. Is their savings rate healthy? What percentage of income should go to savings and investment?` },
-      { label: "¿Debería invertir más desde esta tarjeta?", question: `The user currently transfers 150€/month from their savings card to ETFs. With a balance of 3,882€ and monthly income of 3,200€, should they increase their investment amount? What's a good emergency fund target before investing more?` },
-      { label: "¿Cómo optimizar los gastos fijos?", question: `The user pays 65€/month for private health insurance and 25€/month in donations from their savings card. Are these amounts reasonable? Any ways to optimize fixed expenses while maintaining coverage?` },
+      { label: "¿Estoy ahorrando suficiente?", question: `Context del usuario: ${buildAIContext(cards[1])}\n\nPregunta: Con mi saldo actual y mis transferencias mensuales a inversión, ¿estoy ahorrando lo suficiente? ¿Qué porcentaje de mis ingresos debería destinar?` },
+      { label: "¿Debería invertir más desde esta tarjeta?", question: `Context del usuario: ${buildAIContext(cards[1])}\n\nPregunta: Actualmente transfiero 150€/mes a ETFs. ¿Debería aumentar? ¿Cuál es un buen fondo de emergencia antes de invertir más?` },
+      { label: "¿Cómo optimizar los gastos fijos?", question: `Context del usuario: ${buildAIContext(cards[1])}\n\nPregunta: Pago 65€/mes de seguro médico y 25€/mes en donaciones. ¿Son razonables? ¿Cómo puedo optimizar sin perder cobertura?` },
     ],
   },
   spending: {
-    context: `Gasto mensual total: 1,364 € (Main: 1,124€ + Savings: 240€) de un límite de 2,000€ (68% usado)
-Usuario: ${userProfile.name} | Ingresos: ${userProfile.monthlyIncome} €/mes | Objetivo ahorro: ${userProfile.monthlySavingsGoal} €/mes
-Top gastos: Supermercados 312€, Compras online 214€, Restaurantes 198€, Transporte 156€, Ocio 155€
-Mes anterior total: 1,602€ | Media mensual: 1,480€`,
+    context: "Monthly Spending – 1,124 € of 2,000 € limit used (56%)",
     questions: [
-      { label: "¿Cómo reducir mis gastos mensuales?", question: `The user spent 1,364€ total this month (down from 1,602€ last month). Top categories: groceries 312€, online shopping 214€, restaurants 198€, transport 156€, entertainment 155€. They earn 3,200€ and want to save 600€/month. Give specific, actionable tips for each category.` },
-      { label: "¿Mi límite de gasto es adecuado?", question: `The user has a 2,000€ monthly limit and used 68% (1,364€). They earn 3,200€/month with a 600€ savings goal. Is this limit too high, too low, or just right? What's the ideal spending-to-income ratio?` },
-      { label: "¿Qué patrones debo vigilar?", question: `Analyzing the user's spending: online shopping jumped to 214€ (was ~150€ avg), restaurants/delivery at 198€ is consistent. Subscriptions are 89€ fixed. What patterns are concerning? What's likely impulse spending vs essential? Give month-over-month insights.` },
+      { label: "¿Cómo reducir mis gastos mensuales?", question: `Context del usuario: ${userProfile.name}, ingresos ${userProfile.monthlyIncome}€/mes, objetivo ahorro ${userProfile.monthlySavingsGoal}€/mes. Gasto total este mes: 1,364€ (Main: 1,124€ + Savings: 240€). Mes anterior: 1,602€. Top gastos: Supermercados 312€, Compras online 214€, Restaurantes 198€, Transporte 156€, Ocio 155€.\n\nPregunta: ¿Cómo puedo reducir mis gastos? Dame consejos específicos para cada categoría.` },
+      { label: "¿Mi límite de gasto es adecuado?", question: `Context del usuario: ${userProfile.name}, ingresos ${userProfile.monthlyIncome}€/mes, límite 2,000€, usado 68% (1,364€), objetivo ahorro ${userProfile.monthlySavingsGoal}€/mes.\n\nPregunta: ¿Mi límite de gasto es demasiado alto, bajo o adecuado? ¿Cuál es la ratio ideal gasto/ingresos?` },
+      { label: "¿Qué patrones debo vigilar?", question: `Context del usuario: Compras online subieron a 214€ (media ~150€), restaurantes/delivery estable a 198€, suscripciones fijas 89€. Mes anterior total 1,602€, este mes 1,364€.\n\nPregunta: ¿Qué patrones de gasto son preocupantes? ¿Qué es gasto impulsivo vs esencial? Dame análisis mes a mes.` },
     ],
   },
 };
