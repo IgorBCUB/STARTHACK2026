@@ -5,10 +5,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { NestorModeProvider } from "@/contexts/NestorModeContext";
 import NestorToggle from "@/components/NestorToggle";
+import HomeScreen from "./pages/HomeScreen";
 import FinanceScreen from "./pages/FinanceScreen";
 import ExploreScreen from "./pages/ExploreScreen";
 import AssetDetailScreen from "./pages/AssetDetailScreen";
 import InvestPreviewScreen from "./pages/InvestPreviewScreen";
+import CardsScreen from "./pages/CardsScreen";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,9 +25,11 @@ const App = () => (
           <NestorToggle />
           <Routes>
             <Route path="/" element={<FinanceScreen />} />
+            <Route path="/home" element={<HomeScreen />} />
             <Route path="/explore" element={<ExploreScreen />} />
             <Route path="/asset" element={<AssetDetailScreen />} />
             <Route path="/invest" element={<InvestPreviewScreen />} />
+            <Route path="/cards" element={<CardsScreen />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

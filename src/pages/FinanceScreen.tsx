@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, Info, CreditCard, Plus, Monitor, Home, BarChart3, Search, CreditCard as CardIcon, TrendingUp, Bitcoin } from "lucide-react";
+import { Eye, Info, CreditCard, Plus, Monitor, TrendingUp, Bitcoin } from "lucide-react";
 import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
+import BottomNav from "@/components/BottomNav";
 
 type InsightTarget = "main-account" | "stocks" | "crypto" | null;
 
@@ -152,15 +153,7 @@ const FinanceScreen = () => {
           </div>
         </div>
 
-        {/* Bottom Nav */}
-        <div className={`mt-auto border-t border-border ${isNestorMode ? "opacity-30 pointer-events-none" : ""}`}>
-          <div className="flex justify-around py-3">
-            <NavItem icon={<Home className="w-5 h-5" />} label="Home" />
-            <NavItem icon={<BarChart3 className="w-5 h-5" />} label="Finances" active />
-            <NavItem icon={<Search className="w-5 h-5" />} label="Explore" />
-            <NavItem icon={<CardIcon className="w-5 h-5" />} label="Cards" />
-          </div>
-        </div>
+        <BottomNav />
 
         {/* Nestor Insight Panel */}
         {insightTarget && insightQuestions[insightTarget] && (
@@ -175,12 +168,5 @@ const FinanceScreen = () => {
     </div>
   );
 };
-
-const NavItem = ({ icon, label, active = false }: { icon: React.ReactNode; label: string; active?: boolean }) => (
-  <div className={`flex flex-col items-center gap-1 ${active ? "text-primary" : "text-muted-foreground"}`}>
-    {icon}
-    <span className="text-[10px] font-medium">{label}</span>
-  </div>
-);
 
 export default FinanceScreen;
