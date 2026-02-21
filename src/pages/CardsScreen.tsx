@@ -5,6 +5,12 @@ import BottomNav from "@/components/BottomNav";
 import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
 
+const userProfile = {
+  name: "Carlos Martínez",
+  monthlyIncome: 3200,
+  monthlySavingsGoal: 600,
+};
+
 const cards = [
   {
     name: "Main Card",
@@ -13,6 +19,19 @@ const cards = [
     type: "Visa",
     balance: "12,026.00 €",
     color: "from-foreground to-foreground/80",
+    spending: {
+      total: 1124,
+      categories: [
+        { name: "Supermercados (Mercadona, Lidl)", amount: 312 },
+        { name: "Restaurantes y delivery (Uber Eats, Glovo)", amount: 198 },
+        { name: "Transporte (gasolina, parking)", amount: 156 },
+        { name: "Suscripciones (Netflix, Spotify, iCloud, gym)", amount: 89 },
+        { name: "Compras online (Amazon, Zara)", amount: 214 },
+        { name: "Ocio y salidas", amount: 155 },
+      ],
+      lastMonth: 1387,
+      avgMonthly: 1250,
+    },
   },
   {
     name: "Savings Card",
@@ -21,6 +40,16 @@ const cards = [
     type: "Mastercard",
     balance: "3,882.00 €",
     color: "from-primary to-primary/70",
+    spending: {
+      total: 240,
+      categories: [
+        { name: "Transferencia a inversión (ETFs)", amount: 150 },
+        { name: "Seguro médico privado", amount: 65 },
+        { name: "Donación mensual (ONG)", amount: 25 },
+      ],
+      lastMonth: 215,
+      avgMonthly: 230,
+    },
   },
 ];
 
@@ -30,31 +59,41 @@ const recentCardActivity = [
   { merchant: "Lidl", amount: "-45.87 €", date: "Yesterday", card: "Main Card" },
 ];
 
-type InsightTarget = "card-main" | "card-savings" | "spending" | null;
+const buildCardContext = (card: typeof cards[0]) => {
+  const catBreakdown = card.spending.categories.map(c => `  - ${c.name}: ${c.amount} €`).join("\n");
+  return `${card.name} (${card.type}) – Saldo: ${card.balance}
+Usuario: ${userProfile.name} | Ingresos: ${userProfile.monthlyIncome} €/mes | Objetivo ahorro: ${userProfile.monthlySavingsGoal} €/mes
+Gasto este mes: ${card.spending.total} € | Mes anterior: ${card.spending.lastMonth} € | Media mensual: ${card.spending.avgMonthly} €
+Desglose por categoría:
+${catBreakdown}`;
+};
 
-const insightData: Record<Exclude<InsightTarget, null>, { context: string; questions: { label: string; question: string }[] }> = {
-  "card-main": {
-    context: "Main Card (Visa) – Balance: 12,026.00 €",
+const insightData: Record<string, { context: string; questions: { label: string; question: string }[] }> = {
+  "card-0": {
+    context: buildCardContext(cards[0]),
     questions: [
-      { label: "¿En qué consiste el gasto de esta tarjeta?", question: "Break down the typical spending categories and patterns for this Visa card with a 12,026€ balance. What are the main expenses?" },
-      { label: "¿Estoy gastando demasiado?", question: "Analyze if spending 1,124€ out of a 2,000€ monthly limit on this card is healthy. Am I overspending?" },
-      { label: "¿Debería tener otra tarjeta?", question: "Should I consider having a second card for specific expenses? What are the pros and cons of splitting spending across cards?" },
+      { label: "¿En qué estoy gastando más?", question: `Given this user's exact spending breakdown this month (Supermercados: 312€, Restaurantes/delivery: 198€, Transporte: 156€, Suscripciones: 89€, Compras online: 214€, Ocio: 155€ — total 1,124€), which categories are above average and where can they cut back? Compare with last month's 1,387€.` },
+      { label: "¿Estoy gastando demasiado?", question: `This user earns 3,200€/month and spent 1,124€ on their main card this month (vs 1,387€ last month). Their savings goal is 600€/month. Analyze if their spending is sustainable and what adjustments they should make. Be specific with numbers.` },
+      { label: "¿Cómo puedo reducir suscripciones?", question: `The user pays 89€/month in subscriptions: Netflix, Spotify, iCloud, and gym membership. Are there ways to optimize this? Shared plans, alternatives, or subscriptions they might not need? Give specific savings estimates.` },
     ],
   },
-  "card-savings": {
-    context: "Savings Card (Mastercard) – Balance: 3,882.00 €",
+  "card-1": {
+    context: buildCardContext(cards[1]),
     questions: [
-      { label: "¿Para qué debería usar esta tarjeta?", question: "What's the best strategy for using a dedicated savings card with 3,882€? Should I reserve it for specific purchases?" },
-      { label: "¿Cómo optimizar los beneficios?", question: "How can I maximize the benefits of a Mastercard savings card? What rewards or cashback programs should I look into?" },
-      { label: "¿Conviene consolidar tarjetas?", question: "Is it better to consolidate my spending into one card or keep two separate cards for different purposes?" },
+      { label: "¿Estoy ahorrando suficiente?", question: `The user has 3,882€ in their savings card and invests 150€/month in ETFs with a 600€/month savings goal. They earn 3,200€. Is their savings rate healthy? What percentage of income should go to savings and investment?` },
+      { label: "¿Debería invertir más desde esta tarjeta?", question: `The user currently transfers 150€/month from their savings card to ETFs. With a balance of 3,882€ and monthly income of 3,200€, should they increase their investment amount? What's a good emergency fund target before investing more?` },
+      { label: "¿Cómo optimizar los gastos fijos?", question: `The user pays 65€/month for private health insurance and 25€/month in donations from their savings card. Are these amounts reasonable? Any ways to optimize fixed expenses while maintaining coverage?` },
     ],
   },
   spending: {
-    context: "Monthly Spending – 1,124 € of 2,000 € limit used (56%)",
+    context: `Gasto mensual total: 1,364 € (Main: 1,124€ + Savings: 240€) de un límite de 2,000€ (68% usado)
+Usuario: ${userProfile.name} | Ingresos: ${userProfile.monthlyIncome} €/mes | Objetivo ahorro: ${userProfile.monthlySavingsGoal} €/mes
+Top gastos: Supermercados 312€, Compras online 214€, Restaurantes 198€, Transporte 156€, Ocio 155€
+Mes anterior total: 1,602€ | Media mensual: 1,480€`,
     questions: [
-      { label: "¿Cómo reducir mis gastos mensuales?", question: "I've spent 1,124€ out of my 2,000€ monthly limit. What practical tips can help me reduce monthly card spending?" },
-      { label: "¿Es saludable mi límite de gasto?", question: "Is a 2,000€ monthly spending limit appropriate? How should I set my limit based on income and savings goals?" },
-      { label: "¿Qué patrones de gasto debo vigilar?", question: "What spending patterns should I watch out for? Common traps like subscriptions, impulse purchases, etc." },
+      { label: "¿Cómo reducir mis gastos mensuales?", question: `The user spent 1,364€ total this month (down from 1,602€ last month). Top categories: groceries 312€, online shopping 214€, restaurants 198€, transport 156€, entertainment 155€. They earn 3,200€ and want to save 600€/month. Give specific, actionable tips for each category.` },
+      { label: "¿Mi límite de gasto es adecuado?", question: `The user has a 2,000€ monthly limit and used 68% (1,364€). They earn 3,200€/month with a 600€ savings goal. Is this limit too high, too low, or just right? What's the ideal spending-to-income ratio?` },
+      { label: "¿Qué patrones debo vigilar?", question: `Analyzing the user's spending: online shopping jumped to 214€ (was ~150€ avg), restaurants/delivery at 198€ is consistent. Subscriptions are 89€ fixed. What patterns are concerning? What's likely impulse spending vs essential? Give month-over-month insights.` },
     ],
   },
 };
@@ -64,7 +103,7 @@ const CardsScreen = () => {
   const { isNestorMode } = useNestorMode();
   const [activeCard, setActiveCard] = useState(0);
   const [showNumber, setShowNumber] = useState(false);
-  const [insightTarget, setInsightTarget] = useState<InsightTarget>(null);
+  const [insightTarget, setInsightTarget] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-background flex justify-center">
@@ -85,7 +124,7 @@ const CardsScreen = () => {
                 key={i}
                 onClick={() => {
                   if (isNestorMode) {
-                    setInsightTarget(i === 0 ? "card-main" : "card-savings");
+                    setInsightTarget(`card-${i}`);
                   } else {
                     setActiveCard(i);
                   }
