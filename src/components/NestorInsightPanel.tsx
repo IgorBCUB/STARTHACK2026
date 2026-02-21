@@ -147,7 +147,7 @@ const NestorInsightPanel = ({ context, questions, onClose, onNavigate }: NestorI
                 </div>
               )}
               {response && (
-                <div className="prose prose-sm prose-invert max-w-none text-white/90 text-justify [&_h1]:text-primary [&_h1]:mt-5 [&_h1]:mb-2 [&_h2]:text-primary [&_h2]:mt-5 [&_h2]:mb-2 [&_h3]:text-primary [&_h3]:mt-5 [&_h3]:mb-2 [&_p]:mb-3 [&_strong]:text-white [&_a]:text-primary [&_ul]:mb-3 [&_ol]:mb-3">
+                <div className="prose prose-sm prose-invert max-w-none text-white/90 text-justify [&_h1]:text-primary [&_h1]:font-bold [&_h1]:mt-5 [&_h1]:mb-2 [&_h2]:text-primary [&_h2]:font-bold [&_h2]:mt-5 [&_h2]:mb-2 [&_h3]:text-primary [&_h3]:font-bold [&_h3]:mt-5 [&_h3]:mb-2 [&_p]:mb-3 [&_strong]:text-white [&_a]:text-primary [&_ul]:mb-3 [&_ol]:mb-3">
                   <ReactMarkdown>{mainContent}</ReactMarkdown>
                 </div>
               )}
