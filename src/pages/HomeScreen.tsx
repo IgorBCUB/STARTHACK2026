@@ -41,7 +41,7 @@ const HomeScreen = () => {
           </div>
 
           {/* Main account card */}
-          <div className={`bg-secondary rounded-2xl p-5 mb-6 ${isNestorMode ? "opacity-30 pointer-events-none" : ""}`}>
+          <div className={`bg-primary/15 border border-primary/30 rounded-2xl p-5 mb-6 ${isNestorMode ? "opacity-30 pointer-events-none" : ""}`}>
             <div className="flex items-center justify-between mb-1">
               <div className="flex items-center gap-2">
                 <p className="text-base font-semibold text-foreground">Main account</p>
@@ -67,9 +67,9 @@ const HomeScreen = () => {
                 <div
                   className={`w-12 h-12 rounded-full flex items-center justify-center ${
                     action.filled
-                      ? "bg-foreground text-background"
+                      ? "bg-primary text-primary-foreground"
                       : action.outlined
-                        ? "border-2 border-foreground text-foreground"
+                        ? "border-2 border-primary text-primary"
                         : "border border-border text-foreground"
                   }`}
                 >
