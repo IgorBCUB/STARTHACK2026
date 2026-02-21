@@ -1,0 +1,4 @@
+project_id = "irxftwnxkpyxgqahapli"
+
+[functions.nestor-insights]
+verify_jwt = false
