@@ -70,7 +70,7 @@ const FinanceScreen = () => {
           </div>
 
           {/* Action buttons */}
-          <div className={`flex gap-6 mb-6 ${isNestorMode ? "opacity-30 pointer-events-none" : ""}`}>
+          <div className="flex gap-6 mb-6">
             <button
               onClick={() => navigate("/explore")}
               className="flex flex-col items-center gap-2"
@@ -80,7 +80,7 @@ const FinanceScreen = () => {
               </div>
               <span className="text-xs text-foreground font-medium">New Space</span>
             </button>
-            <button className="flex flex-col items-center gap-2">
+            <button className={`flex flex-col items-center gap-2 ${isNestorMode ? "opacity-30 pointer-events-none" : ""}`}>
               <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center">
                 <Monitor className="w-6 h-6 text-foreground" />
               </div>

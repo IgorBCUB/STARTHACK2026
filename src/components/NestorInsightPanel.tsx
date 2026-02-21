@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, Sparkles, ArrowRight, Loader2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { useNestorMode } from "@/contexts/NestorModeContext";
 
 interface QuestionOption {
   label: string;
@@ -18,9 +19,24 @@ interface NestorInsightPanelProps {
 const FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/nestor-insights`;
 
 const NestorInsightPanel = ({ context, questions, onClose, onNavigate }: NestorInsightPanelProps) => {
+  const { setIsPanelOpen } = useNestorMode();
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
   const [response, setResponse] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsPanelOpen(true);
+    return () => setIsPanelOpen(false);
+  }, [setIsPanelOpen]);
+
+  // Split response into main content and sources
+  const sourceMarkers = ["⚠️", "Fuentes:", "Sources:", "Referencias:"];
+  const splitIndex = sourceMarkers.reduce((idx, marker) => {
+    const i = response.lastIndexOf(marker);
+    return i !== -1 && (idx === -1 || i < idx) ? i : idx;
+  }, -1);
+  const mainContent = splitIndex !== -1 ? response.slice(0, splitIndex).trim() : response;
+  const sources = splitIndex !== -1 ? response.slice(splitIndex).trim() : null;
 
   const handleQuestionClick = async (q: QuestionOption) => {
     setSelectedQuestion(q.label);
@@ -131,8 +147,8 @@ const NestorInsightPanel = ({ context, questions, onClose, onNavigate }: NestorI
                 </div>
               )}
               {response && (
-                <div className="prose prose-sm prose-invert max-w-none text-white/90 [&_h1]:text-primary [&_h2]:text-primary [&_h3]:text-primary [&_strong]:text-white [&_a]:text-primary">
-                  <ReactMarkdown>{response}</ReactMarkdown>
+                <div className="prose prose-sm prose-invert max-w-none text-white/90 text-justify [&_h1]:text-primary [&_h1]:mt-5 [&_h1]:mb-2 [&_h2]:text-primary [&_h2]:mt-5 [&_h2]:mb-2 [&_h3]:text-primary [&_h3]:mt-5 [&_h3]:mb-2 [&_p]:mb-3 [&_strong]:text-white [&_a]:text-primary [&_ul]:mb-3 [&_ol]:mb-3">
+                  <ReactMarkdown>{mainContent}</ReactMarkdown>
                 </div>
               )}
               {/* Action buttons after response */}
@@ -146,6 +162,12 @@ const NestorInsightPanel = ({ context, questions, onClose, onNavigate }: NestorI
                     Explore investments
                     <ArrowRight className="w-4 h-4" />
                   </button>
+                </div>
+              )}
+              {/* Sources */}
+              {!isLoading && sources && (
+                <div className="mt-4 pt-3 border-t border-white/10">
+                  <p className="text-white/30 text-[11px] leading-relaxed whitespace-pre-line">{sources}</p>
                 </div>
               )}
             </div>
