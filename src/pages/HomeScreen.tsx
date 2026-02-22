@@ -91,11 +91,11 @@ const HomeScreen = () => {
             <button
               ref={mainAccountRef}
               onClick={() => handleBoxClick("main-account")}
-              className={`w-full text-left bg-primary/15 border rounded-2xl p-5 transition-all overflow-hidden ${
+              className={`w-full text-left bg-primary/15 border rounded-2xl p-5 transition-all overflow-visible ${
               isNestorMode ?
               insightTarget === "main-account" ?
-              "border-2 border-primary ring-2 ring-primary/30 pb-0" :
-              "border-2 border-primary/60 hover:border-primary cursor-pointer pb-0" :
+              "border-2 border-primary ring-2 ring-primary/30" :
+              "border-2 border-primary/60 hover:border-primary cursor-pointer" :
               "border-primary/30"}`
               }>
 
@@ -110,21 +110,21 @@ const HomeScreen = () => {
                 <p className="text-xs text-muted-foreground">Personal</p>
               </div>
               <p className="text-3xl font-bold text-foreground mb-1">15,908.00 €</p>
-              {isNestorMode &&
-              <div className="mt-3 flex items-end gap-0">
-                  <img src={nestorDudando} alt="Nestor" className="w-40 h-40 object-contain drop-shadow-lg flex-shrink-0 translate-y-2 -mr-2 relative z-10" />
-                  <button
-                    onClick={(e) => { e.stopPropagation(); navigate("/portfolio-future"); }}
-                    className="relative flex-1 bg-primary rounded-xl p-3 mb-4 ml-2 text-left hover:bg-primary/90 transition-all active:scale-[0.97] shadow-lg shadow-primary/30"
-                  >
-                    {/* Speech bubble tail */}
-                    <div className="absolute left-[-8px] bottom-4 w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-r-[8px] border-r-primary" />
-                    <p className="text-sm font-bold text-primary-foreground leading-snug">Ver futuro de tu cartera →</p>
-                    <p className="text-xs text-primary-foreground/70 mt-0.5">Descubre qué activos subirán o bajarán</p>
-                  </button>
-                </div>
-              }
             </button>
+            {isNestorMode &&
+            <div className="mt-[-8px] flex items-end gap-0 px-5">
+                <img src={nestorDudando} alt="Nestor" className="w-40 h-40 object-contain drop-shadow-lg flex-shrink-0 translate-y-2 -mr-2 relative z-10" />
+                <button
+                  onClick={() => navigate("/portfolio-future")}
+                  className="relative flex-1 bg-primary rounded-xl p-3 mb-4 ml-2 text-left hover:bg-primary/90 transition-all active:scale-[0.97] shadow-lg shadow-primary/30 animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite]"
+                >
+                  {/* Speech bubble tail */}
+                  <div className="absolute left-[-8px] bottom-4 w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-r-[8px] border-r-primary" />
+                  <p className="text-sm font-bold text-primary-foreground leading-snug">Ver futuro de tu cartera →</p>
+                  <p className="text-xs text-primary-foreground/70 mt-0.5">Descubre qué activos subirán o bajarán</p>
+                </button>
+              </div>
+            }
             {insightTarget === "main-account" && (
               <InlineNestorQuestions questions={insightQuestions["main-account"].questions} onSelect={handleQuestionSelect} anchorRef={mainAccountRef} />
             )}
