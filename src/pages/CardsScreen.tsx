@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Snowflake, Settings, Eye, EyeOff, Copy, ArrowRight } from "lucide-react";
+import { Plus, Snowflake, Settings, Eye, EyeOff, Copy } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
+import InlineNestorQuestions from "@/components/InlineNestorQuestions";
 
 const userProfile = {
   name: "Carlos Martínez",
@@ -95,25 +96,6 @@ const insightData: Record<string, { context: string; questions: { label: string;
   },
 };
 
-const InlineQuestions = ({ targetKey, onSelect }: { targetKey: string; onSelect: (q: { label: string; question: string }) => void }) => {
-  const data = insightData[targetKey];
-  if (!data) return null;
-  return (
-    <div className="mt-3 space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
-      {data.questions.map((q) => (
-        <button
-          key={q.label}
-          onClick={(e) => { e.stopPropagation(); onSelect(q); }}
-          className="w-full text-left px-4 py-3 rounded-xl bg-primary/10 border border-primary/30 hover:border-primary hover:bg-primary/15 transition-all text-sm text-foreground font-medium flex items-center justify-between group"
-        >
-          {q.label}
-          <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-        </button>
-      ))}
-    </div>
-  );
-};
-
 const CardsScreen = () => {
   const navigate = useNavigate();
   const { isNestorMode } = useNestorMode();
@@ -121,6 +103,8 @@ const CardsScreen = () => {
   const [showNumber, setShowNumber] = useState(false);
   const [insightTarget, setInsightTarget] = useState<string | null>(null);
   const [activeQuestion, setActiveQuestion] = useState<{ context: string; questions: { label: string; question: string }[] } | null>(null);
+  const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const spendingRef = useRef<HTMLButtonElement>(null);
 
   const handleBoxClick = (target: string) => {
     if (isNestorMode) {
@@ -140,7 +124,6 @@ const CardsScreen = () => {
   return (
     <div className="min-h-screen bg-background flex justify-center">
       <div className="w-full max-w-[430px] min-h-screen bg-background flex flex-col">
-        {/* Header */}
         <div className="px-5 pt-14 pb-4">
           <div className={`flex items-center justify-between mb-6 transition-opacity duration-300 ${insightTarget ? "opacity-20 pointer-events-none" : ""}`}>
             <h1 className="text-2xl font-bold text-foreground">Cards</h1>
@@ -156,8 +139,9 @@ const CardsScreen = () => {
               const isSelected = insightTarget === targetKey;
               const isDimmed = insightTarget && !isSelected;
               return (
-                <div key={i} className={`flex-shrink-0 w-[85%] snap-center transition-opacity duration-300 ${isDimmed ? "opacity-20 pointer-events-none" : ""}`}>
+                <div key={i} className={`flex-shrink-0 w-[85%] snap-center flex flex-col transition-opacity duration-300 ${isDimmed ? "opacity-20 pointer-events-none" : ""}`}>
                   <button
+                    ref={(el) => { cardRefs.current[i] = el; }}
                     onClick={() => {
                       if (isNestorMode) {
                         handleBoxClick(targetKey);
@@ -188,7 +172,11 @@ const CardsScreen = () => {
                     </div>
                   </button>
                   {isSelected && (
-                    <InlineQuestions targetKey={targetKey} onSelect={handleQuestionSelect} />
+                    <InlineNestorQuestions
+                      questions={insightData[targetKey].questions}
+                      onSelect={handleQuestionSelect}
+                      anchorRef={{ current: cardRefs.current[i] }}
+                    />
                   )}
                 </div>
               );
@@ -215,8 +203,9 @@ const CardsScreen = () => {
           </div>
 
           {/* Spending limits */}
-          <div className={`mb-6 transition-opacity duration-300 ${insightTarget && insightTarget !== "spending" ? "opacity-20 pointer-events-none" : ""}`}>
+          <div className={`mb-6 flex flex-col transition-opacity duration-300 ${insightTarget && insightTarget !== "spending" ? "opacity-20 pointer-events-none" : ""}`}>
             <button
+              ref={spendingRef}
               onClick={() => handleBoxClick("spending")}
               className={`w-full text-left bg-secondary rounded-xl p-4 transition-all ${
                 isNestorMode
@@ -235,7 +224,7 @@ const CardsScreen = () => {
               </div>
             </button>
             {insightTarget === "spending" && (
-              <InlineQuestions targetKey="spending" onSelect={handleQuestionSelect} />
+              <InlineNestorQuestions questions={insightData["spending"].questions} onSelect={handleQuestionSelect} anchorRef={spendingRef} />
             )}
           </div>
 
@@ -259,7 +248,6 @@ const CardsScreen = () => {
         <BottomNav />
       </div>
 
-      {/* Nestor Insight Panel - only when a question is selected */}
       {activeQuestion && (
         <NestorInsightPanel
           context={activeQuestion.context}

@@ -1,14 +1,16 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Info, ArrowRight } from "lucide-react";
-import { useState } from "react";
+import { ArrowLeft, Info } from "lucide-react";
+import { useState, useRef } from "react";
 import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
+import InlineNestorQuestions from "@/components/InlineNestorQuestions";
 
 const AssetDetailScreen = () => {
   const navigate = useNavigate();
   const { isNestorMode } = useNestorMode();
   const [showQuestions, setShowQuestions] = useState(false);
   const [activeQuestion, setActiveQuestion] = useState<{ context: string; questions: typeof questions } | null>(null);
+  const askButtonRef = useRef<HTMLButtonElement>(null);
 
   const chartPath = "M 20 120 Q 60 130, 80 110 Q 100 90, 130 100 Q 160 110, 200 85 Q 230 65, 260 90 Q 290 115, 310 60 Q 325 35, 340 45";
 
@@ -33,7 +35,6 @@ const AssetDetailScreen = () => {
   return (
     <div className="min-h-screen bg-background flex justify-center">
       <div className="w-full max-w-[430px] min-h-screen bg-background flex flex-col">
-        {/* Header */}
         <div className="px-5 pt-14 pb-4">
           <div className="flex items-center gap-4 mb-6">
             <button onClick={() => navigate("/explore")} className="text-foreground">
@@ -42,7 +43,6 @@ const AssetDetailScreen = () => {
             <h1 className="text-lg font-bold text-foreground">Core DAX EUR (Acc)</h1>
           </div>
 
-          {/* Asset Info */}
           <div className={`flex flex-col items-center mb-6 transition-opacity duration-300 ${showQuestions ? "opacity-20 pointer-events-none" : ""}`}>
             <div className={`w-14 h-14 rounded-full bg-foreground flex items-center justify-center mb-3 transition-all ${isNestorMode ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : ""}`}>
               <span className="text-[9px] font-bold text-primary-foreground leading-tight text-center">iShares</span>
@@ -52,7 +52,6 @@ const AssetDetailScreen = () => {
             <p className="text-xs text-muted-foreground mt-1">April 16, 14:33</p>
           </div>
 
-          {/* Chart */}
           <div className={`relative w-full h-40 mb-4 transition-opacity duration-300 ${isNestorMode ? "opacity-50" : ""} ${showQuestions ? "opacity-20 pointer-events-none" : ""}`}>
             <svg viewBox="0 0 360 150" className="w-full h-full" preserveAspectRatio="none">
               <path d={chartPath} fill="none" stroke="hsl(165, 100%, 32%)" strokeWidth="2" />
@@ -61,31 +60,17 @@ const AssetDetailScreen = () => {
             <div className="absolute bottom-6 left-1/3 text-[10px] text-muted-foreground">124.32 €</div>
           </div>
 
-          {/* Time Range */}
           <div className={`flex rounded-lg bg-secondary overflow-hidden mb-6 transition-opacity duration-300 ${isNestorMode ? "opacity-30 pointer-events-none" : ""} ${showQuestions ? "opacity-20 pointer-events-none" : ""}`}>
             {["1W", "1M", "1Y", "5Y"].map((period, i) => (
-              <button
-                key={period}
-                className={`flex-1 py-2.5 text-sm font-medium transition-colors ${
-                  i === 3 ? "bg-foreground text-primary-foreground rounded-lg" : "text-muted-foreground"
-                }`}
-              >
-                {period}
-              </button>
+              <button key={period} className={`flex-1 py-2.5 text-sm font-medium transition-colors ${i === 3 ? "bg-foreground text-primary-foreground rounded-lg" : "text-muted-foreground"}`}>{period}</button>
             ))}
           </div>
 
-          {/* Info pills */}
           <div className={`flex gap-2 mb-6 transition-opacity duration-300 ${isNestorMode ? "opacity-30 pointer-events-none" : ""} ${showQuestions ? "opacity-20 pointer-events-none" : ""}`}>
-            <div className="flex items-center gap-2 px-4 py-2.5 bg-secondary rounded-full text-sm text-foreground">
-              🐢 Start small
-            </div>
-            <div className="flex items-center gap-2 px-4 py-2.5 bg-secondary rounded-full text-sm text-foreground">
-              📊 What's an ETF?
-            </div>
+            <div className="flex items-center gap-2 px-4 py-2.5 bg-secondary rounded-full text-sm text-foreground">🐢 Start small</div>
+            <div className="flex items-center gap-2 px-4 py-2.5 bg-secondary rounded-full text-sm text-foreground">📊 What's an ETF?</div>
           </div>
 
-          {/* Key Information */}
           <div className={`mb-6 transition-opacity duration-300 ${isNestorMode ? "opacity-30 pointer-events-none" : ""} ${showQuestions ? "opacity-20 pointer-events-none" : ""}`}>
             <h3 className="font-bold text-foreground mb-3">Key Information</h3>
             <div className="bg-secondary rounded-xl p-4 flex items-center justify-between">
@@ -97,34 +82,24 @@ const AssetDetailScreen = () => {
             </div>
           </div>
 
-          {/* Buttons */}
           {isNestorMode ? (
-            <div className="space-y-3">
+            <div className="flex flex-col space-y-3">
               <button
+                ref={askButtonRef}
                 onClick={handleAskNestor}
                 className={`w-full py-4 rounded-xl text-base font-semibold transition-all ${
-                  showQuestions
-                    ? "bg-primary text-primary-foreground ring-2 ring-primary/30"
-                    : "bg-primary text-primary-foreground"
+                  showQuestions ? "bg-primary text-primary-foreground ring-2 ring-primary/30" : "bg-primary text-primary-foreground"
                 }`}
               >
                 🧠 Ask NestorTheInvestor
               </button>
 
-              {/* Inline questions */}
               {showQuestions && (
-                <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                  {questions.map((q) => (
-                    <button
-                      key={q.label}
-                      onClick={() => handleQuestionSelect(q)}
-                      className="w-full text-left px-4 py-3 rounded-xl bg-primary/10 border border-primary/30 hover:border-primary hover:bg-primary/15 transition-all text-sm text-foreground font-medium flex items-center justify-between group"
-                    >
-                      {q.label}
-                      <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                    </button>
-                  ))}
-                </div>
+                <InlineNestorQuestions
+                  questions={questions}
+                  onSelect={handleQuestionSelect}
+                  anchorRef={askButtonRef}
+                />
               )}
 
               <button
@@ -135,16 +110,12 @@ const AssetDetailScreen = () => {
               </button>
             </div>
           ) : (
-            <button
-              onClick={() => navigate("/invest")}
-              className="w-full py-4 bg-primary text-primary-foreground rounded-xl text-base font-semibold"
-            >
+            <button onClick={() => navigate("/invest")} className="w-full py-4 bg-primary text-primary-foreground rounded-xl text-base font-semibold">
               Invest
             </button>
           )}
         </div>
 
-        {/* Nestor Insight Panel - only when a question is selected */}
         {activeQuestion && (
           <NestorInsightPanel
             context={activeQuestion.context}

@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Search, Building2, TrendingUp, Globe, BarChart3, ArrowRight } from "lucide-react";
-import { useState } from "react";
+import { ArrowLeft, Search, Building2, TrendingUp, Globe, BarChart3 } from "lucide-react";
+import { useState, useRef } from "react";
 import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
+import InlineNestorQuestions from "@/components/InlineNestorQuestions";
 
 const etfs = [
   { name: "Core DAX (Acc)", issuer: "iShares", ticker: "EXS1", price: "127.90 €", change: "0.36 %", down: true, logo: "iShares" },
@@ -34,6 +35,7 @@ const ExploreScreen = () => {
   const { isNestorMode } = useNestorMode();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [activeQuestion, setActiveQuestion] = useState<{ context: string; questions: { label: string; question: string }[] } | null>(null);
+  const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const handleAssetClick = (etf: typeof etfs[0], index: number) => {
     if (isNestorMode) {
@@ -117,8 +119,9 @@ const ExploreScreen = () => {
             const isSelected = selectedIndex === i;
             const isDimmed = selectedIndex !== null && !isSelected;
             return (
-              <div key={i} className={`transition-opacity duration-300 ${isDimmed ? "opacity-20 pointer-events-none" : ""}`}>
+              <div key={i} className={`flex flex-col transition-opacity duration-300 ${isDimmed ? "opacity-20 pointer-events-none" : ""}`}>
                 <button
+                  ref={(el) => { itemRefs.current[i] = el; }}
                   onClick={() => handleAssetClick(etf, i)}
                   className={`w-full flex items-center justify-between py-4 transition-all ${
                     isNestorMode
@@ -157,18 +160,11 @@ const ExploreScreen = () => {
                   </div>
                 </button>
                 {isSelected && (
-                  <div className="mt-2 mb-3 space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                    {getAssetQuestions(etf).map((q) => (
-                      <button
-                        key={q.label}
-                        onClick={() => handleQuestionSelect(etf, q)}
-                        className="w-full text-left px-4 py-3 rounded-xl bg-primary/10 border border-primary/30 hover:border-primary hover:bg-primary/15 transition-all text-sm text-foreground font-medium flex items-center justify-between group"
-                      >
-                        {q.label}
-                        <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                      </button>
-                    ))}
-                  </div>
+                  <InlineNestorQuestions
+                    questions={getAssetQuestions(etf)}
+                    onSelect={(q) => handleQuestionSelect(etf, q)}
+                    anchorRef={{ current: itemRefs.current[i] }}
+                  />
                 )}
               </div>
             );

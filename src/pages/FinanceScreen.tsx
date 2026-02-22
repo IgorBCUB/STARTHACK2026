@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, Info, CreditCard, Plus, Monitor, TrendingUp, Bitcoin, ArrowRight } from "lucide-react";
+import { Eye, Info, CreditCard, Plus, Monitor, TrendingUp, Bitcoin } from "lucide-react";
 import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
+import InlineNestorQuestions from "@/components/InlineNestorQuestions";
 import BottomNav from "@/components/BottomNav";
 
 type InsightTarget = "main-account" | "stocks" | "crypto" | null;
@@ -34,29 +35,14 @@ const insightQuestions: Record<string, { context: string; questions: { label: st
   },
 };
 
-const InlineQuestions = ({ target, onSelect }: { target: InsightTarget; onSelect: (q: { label: string; question: string }) => void }) => {
-  if (!target || !insightQuestions[target]) return null;
-  return (
-    <div className="mt-3 space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
-      {insightQuestions[target].questions.map((q) => (
-        <button
-          key={q.label}
-          onClick={(e) => { e.stopPropagation(); onSelect(q); }}
-          className="w-full text-left px-4 py-3 rounded-xl bg-primary/10 border border-primary/30 hover:border-primary hover:bg-primary/15 transition-all text-sm text-foreground font-medium flex items-center justify-between group"
-        >
-          {q.label}
-          <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-        </button>
-      ))}
-    </div>
-  );
-};
-
 const FinanceScreen = () => {
   const navigate = useNavigate();
   const { isNestorMode } = useNestorMode();
   const [insightTarget, setInsightTarget] = useState<InsightTarget>(null);
-  const [activeQuestion, setActiveQuestion] = useState<{ context: string; questions: { label: string; question: string }[]; selected: { label: string; question: string } } | null>(null);
+  const [activeQuestion, setActiveQuestion] = useState<{ context: string; questions: { label: string; question: string }[] } | null>(null);
+  const mainAccountRef = useRef<HTMLButtonElement>(null);
+  const stocksRef = useRef<HTMLButtonElement>(null);
+  const cryptoRef = useRef<HTMLButtonElement>(null);
 
   const handleBoxClick = (target: InsightTarget, defaultNav?: string) => {
     if (isNestorMode) {
@@ -71,7 +57,6 @@ const FinanceScreen = () => {
       setActiveQuestion({
         context: insightQuestions[insightTarget].context,
         questions: insightQuestions[insightTarget].questions,
-        selected: q,
       });
     }
   };
@@ -79,7 +64,6 @@ const FinanceScreen = () => {
   return (
     <div className="min-h-screen bg-background flex justify-center">
       <div className="w-full max-w-[430px] min-h-screen bg-background flex flex-col">
-        {/* Header */}
         <div className="px-5 pt-14 pb-2">
           <div className={`flex items-center justify-between mb-6 transition-opacity duration-300 ${insightTarget ? "opacity-20 pointer-events-none" : ""}`}>
             <h1 className="text-2xl font-bold text-foreground">Finances</h1>
@@ -87,24 +71,17 @@ const FinanceScreen = () => {
               <Eye className="w-5 h-5 text-muted-foreground" />
               <Info className="w-5 h-5 text-muted-foreground" />
               <CreditCard className="w-5 h-5 text-muted-foreground" />
-              <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-xs font-semibold text-foreground">
-                AB
-              </div>
+              <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-xs font-semibold text-foreground">AB</div>
             </div>
           </div>
 
-          {/* Spaces */}
           <div className={`mb-6 transition-opacity duration-300 ${insightTarget ? "opacity-20 pointer-events-none" : ""}`}>
             <p className="text-sm text-muted-foreground mb-1">Spaces</p>
             <p className="text-3xl font-bold text-foreground">12,026.00 €</p>
           </div>
 
-          {/* Action buttons */}
           <div className={`flex gap-6 mb-6 transition-opacity duration-300 ${insightTarget ? "opacity-20 pointer-events-none" : ""}`}>
-            <button
-              onClick={() => navigate("/explore")}
-              className="flex flex-col items-center gap-2"
-            >
+            <button onClick={() => navigate("/explore")} className="flex flex-col items-center gap-2">
               <div className="w-14 h-14 rounded-full bg-primary flex items-center justify-center">
                 <Plus className="w-6 h-6 text-primary-foreground" />
               </div>
@@ -119,8 +96,9 @@ const FinanceScreen = () => {
           </div>
 
           {/* Main account */}
-          <div className={`mb-8 transition-opacity duration-300 ${insightTarget && insightTarget !== "main-account" ? "opacity-20 pointer-events-none" : ""}`}>
+          <div className={`mb-8 flex flex-col transition-opacity duration-300 ${insightTarget && insightTarget !== "main-account" ? "opacity-20 pointer-events-none" : ""}`}>
             <button
+              ref={mainAccountRef}
               onClick={() => handleBoxClick("main-account")}
               className={`w-full bg-secondary rounded-xl p-4 flex items-center justify-between transition-all ${
                 isNestorMode
@@ -139,7 +117,7 @@ const FinanceScreen = () => {
               <span className="font-semibold text-foreground">12,026.00 €</span>
             </button>
             {insightTarget === "main-account" && (
-              <InlineQuestions target="main-account" onSelect={handleQuestionSelect} />
+              <InlineNestorQuestions questions={insightQuestions["main-account"].questions} onSelect={handleQuestionSelect} anchorRef={mainAccountRef} />
             )}
           </div>
 
@@ -152,8 +130,9 @@ const FinanceScreen = () => {
             <p className={`text-xs text-muted-foreground mb-4 transition-opacity duration-300 ${insightTarget ? "opacity-20 pointer-events-none" : ""}`}>Last updated 12:05</p>
 
             {/* Stocks & ETFs */}
-            <div className={`mb-3 transition-opacity duration-300 ${insightTarget && insightTarget !== "stocks" ? "opacity-20 pointer-events-none" : ""}`}>
+            <div className={`mb-3 flex flex-col transition-opacity duration-300 ${insightTarget && insightTarget !== "stocks" ? "opacity-20 pointer-events-none" : ""}`}>
               <button
+                ref={stocksRef}
                 onClick={() => handleBoxClick("stocks", "/explore")}
                 className={`w-full bg-secondary rounded-xl p-4 flex items-center justify-between transition-all ${
                   isNestorMode
@@ -175,13 +154,14 @@ const FinanceScreen = () => {
                 </div>
               </button>
               {insightTarget === "stocks" && (
-                <InlineQuestions target="stocks" onSelect={handleQuestionSelect} />
+                <InlineNestorQuestions questions={insightQuestions["stocks"].questions} onSelect={handleQuestionSelect} anchorRef={stocksRef} />
               )}
             </div>
 
             {/* Crypto */}
-            <div className={`transition-opacity duration-300 ${insightTarget && insightTarget !== "crypto" ? "opacity-20 pointer-events-none" : ""}`}>
+            <div className={`flex flex-col transition-opacity duration-300 ${insightTarget && insightTarget !== "crypto" ? "opacity-20 pointer-events-none" : ""}`}>
               <button
+                ref={cryptoRef}
                 onClick={() => handleBoxClick("crypto")}
                 className={`w-full bg-secondary rounded-xl p-4 flex items-center justify-between transition-all ${
                   isNestorMode
@@ -203,7 +183,7 @@ const FinanceScreen = () => {
                 </div>
               </button>
               {insightTarget === "crypto" && (
-                <InlineQuestions target="crypto" onSelect={handleQuestionSelect} />
+                <InlineNestorQuestions questions={insightQuestions["crypto"].questions} onSelect={handleQuestionSelect} anchorRef={cryptoRef} />
               )}
             </div>
           </div>
@@ -211,7 +191,6 @@ const FinanceScreen = () => {
 
         <BottomNav />
 
-        {/* Nestor Insight Panel - only when a question is selected */}
         {activeQuestion && (
           <NestorInsightPanel
             context={activeQuestion.context}
