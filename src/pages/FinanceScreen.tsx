@@ -39,7 +39,7 @@ const FinanceScreen = () => {
   const navigate = useNavigate();
   const { isNestorMode } = useNestorMode();
   const [insightTarget, setInsightTarget] = useState<InsightTarget>(null);
-  const [activeQuestion, setActiveQuestion] = useState<{ context: string; questions: { label: string; question: string }[] } | null>(null);
+  const [activeQuestion, setActiveQuestion] = useState<{ context: string; questions: { label: string; question: string }[]; selected: { label: string; question: string } } | null>(null);
   const mainAccountRef = useRef<HTMLButtonElement>(null);
   const stocksRef = useRef<HTMLButtonElement>(null);
   const cryptoRef = useRef<HTMLButtonElement>(null);
@@ -57,6 +57,7 @@ const FinanceScreen = () => {
       setActiveQuestion({
         context: insightQuestions[insightTarget].context,
         questions: insightQuestions[insightTarget].questions,
+        selected: q,
       });
     }
   };
@@ -195,6 +196,7 @@ const FinanceScreen = () => {
           <NestorInsightPanel
             context={activeQuestion.context}
             questions={activeQuestion.questions}
+            initialQuestion={activeQuestion.selected}
             onClose={() => { setActiveQuestion(null); setInsightTarget(null); }}
             onNavigate={(route) => { setActiveQuestion(null); setInsightTarget(null); navigate(route); }}
           />

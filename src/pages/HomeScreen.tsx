@@ -49,6 +49,7 @@ const HomeScreen = () => {
   const { isNestorMode } = useNestorMode();
   const [insightTarget, setInsightTarget] = useState<InsightTarget>(null);
   const [activeQuestion, setActiveQuestion] = useState<{context: string;questions: {label: string;question: string;}[];selected: {label: string;question: string;};} | null>(null);
+
   const mainAccountRef = useRef<HTMLButtonElement>(null);
   const spendingRef = useRef<HTMLButtonElement>(null);
 
@@ -210,6 +211,7 @@ const HomeScreen = () => {
         <NestorInsightPanel
           context={activeQuestion.context}
           questions={activeQuestion.questions}
+          initialQuestion={activeQuestion.selected}
           onClose={() => {setActiveQuestion(null);setInsightTarget(null);}}
           onNavigate={(route) => {setActiveQuestion(null);setInsightTarget(null);navigate(route);}} />
 
