@@ -48,10 +48,21 @@ const HomeScreen = () => {
   const navigate = useNavigate();
   const { isNestorMode } = useNestorMode();
   const [insightTarget, setInsightTarget] = useState<InsightTarget>(null);
+  const [activeQuestion, setActiveQuestion] = useState<{ context: string; questions: { label: string; question: string }[]; selected: { label: string; question: string } } | null>(null);
 
   const handleBoxClick = (target: InsightTarget) => {
     if (isNestorMode) {
-      setInsightTarget(target);
+      setInsightTarget((prev) => (prev === target ? null : target));
+    }
+  };
+
+  const handleQuestionSelect = (q: { label: string; question: string }) => {
+    if (insightTarget && insightQuestions[insightTarget]) {
+      setActiveQuestion({
+        context: insightQuestions[insightTarget].context,
+        questions: insightQuestions[insightTarget].questions,
+        selected: q,
+      });
     }
   };
 
@@ -73,12 +84,14 @@ const HomeScreen = () => {
           </div>
 
           {/* Main account card - accessible in Nestor mode */}
-          <div className="relative mb-6">
+          <div className={`relative mb-6 transition-opacity duration-300 ${insightTarget && insightTarget !== "main-account" ? "opacity-20 pointer-events-none" : ""}`}>
             <button
               onClick={() => handleBoxClick("main-account")}
               className={`w-full text-left bg-primary/15 border rounded-2xl p-5 transition-all ${
                 isNestorMode
-                  ? "border-2 border-primary/60 hover:border-primary cursor-pointer pb-6"
+                  ? insightTarget === "main-account"
+                    ? "border-2 border-primary ring-2 ring-primary/30 pb-6"
+                    : "border-2 border-primary/60 hover:border-primary cursor-pointer pb-6"
                   : "border-primary/30"
               }`}
             >
@@ -104,6 +117,22 @@ const HomeScreen = () => {
                 </div>
               )}
             </button>
+
+            {/* Inline questions for main-account */}
+            {insightTarget === "main-account" && insightQuestions["main-account"] && (
+              <div className="mt-3 space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                {insightQuestions["main-account"].questions.map((q) => (
+                  <button
+                    key={q.label}
+                    onClick={() => handleQuestionSelect(q)}
+                    className="w-full text-left px-4 py-3 rounded-xl bg-primary/10 border border-primary/30 hover:border-primary hover:bg-primary/15 transition-all text-sm text-foreground font-medium flex items-center justify-between group"
+                  >
+                    {q.label}
+                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Quick actions - hidden in Nestor mode */}
@@ -136,29 +165,49 @@ const HomeScreen = () => {
           )}
 
           {/* Spending summary - accessible in Nestor mode */}
-          <button
-            onClick={() => handleBoxClick("spending")}
-            className={`w-full text-left bg-secondary rounded-xl p-4 mb-6 transition-all ${
-              isNestorMode
-                ? "border-2 border-primary/60 hover:border-primary cursor-pointer"
-                : ""
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-semibold text-foreground">Monthly Spending</p>
-                <p className="text-xs text-muted-foreground mt-0.5">Income: +2,450 € · Expenses: -1,124 €</p>
+          <div className={`transition-opacity duration-300 ${insightTarget && insightTarget !== "spending" ? "opacity-20 pointer-events-none" : ""}`}>
+            <button
+              onClick={() => handleBoxClick("spending")}
+              className={`w-full text-left bg-secondary rounded-xl p-4 mb-3 transition-all ${
+                isNestorMode
+                  ? insightTarget === "spending"
+                    ? "border-2 border-primary ring-2 ring-primary/30"
+                    : "border-2 border-primary/60 hover:border-primary cursor-pointer"
+                  : ""
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-foreground">Monthly Spending</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Income: +2,450 € · Expenses: -1,124 €</p>
+                </div>
+                <p className="text-lg font-bold text-success">+54%</p>
               </div>
-              <p className="text-lg font-bold text-success">+54%</p>
-            </div>
-            <div className="w-full h-2 rounded-full bg-muted overflow-hidden mt-3">
-              <div className="h-full bg-primary rounded-full" style={{ width: "46%" }} />
-            </div>
-            <p className="text-[10px] text-muted-foreground mt-1">46% of income spent</p>
-          </button>
+              <div className="w-full h-2 rounded-full bg-muted overflow-hidden mt-3">
+                <div className="h-full bg-primary rounded-full" style={{ width: "46%" }} />
+              </div>
+              <p className="text-[10px] text-muted-foreground mt-1">46% of income spent</p>
+            </button>
 
-          {/* Transaction list - dimmed in Nestor mode */}
-          <div>
+            {/* Inline questions for spending */}
+            {insightTarget === "spending" && insightQuestions["spending"] && (
+              <div className="mb-4 space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                {insightQuestions["spending"].questions.map((q) => (
+                  <button
+                    key={q.label}
+                    onClick={() => handleQuestionSelect(q)}
+                    className="w-full text-left px-4 py-3 rounded-xl bg-primary/10 border border-primary/30 hover:border-primary hover:bg-primary/15 transition-all text-sm text-foreground font-medium flex items-center justify-between group"
+                  >
+                    {q.label}
+                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Transaction list - dimmed in Nestor mode or when insight is active */}
+          <div className={`transition-opacity duration-300 ${insightTarget ? "opacity-20 pointer-events-none" : ""}`}>
             {Object.entries(groupedTransactions).map(([date, txs]) => (
               <div key={date} className="mb-4">
                 <div className="flex items-center justify-between mb-1">
@@ -194,13 +243,13 @@ const HomeScreen = () => {
 
         <BottomNav />
 
-        {/* Nestor Insight Panel */}
-        {insightTarget && insightQuestions[insightTarget] && (
+        {/* Nestor Insight Panel - only when a question is selected */}
+        {activeQuestion && (
           <NestorInsightPanel
-            context={insightQuestions[insightTarget].context}
-            questions={insightQuestions[insightTarget].questions}
-            onClose={() => setInsightTarget(null)}
-            onNavigate={(route) => { setInsightTarget(null); navigate(route); }}
+            context={activeQuestion.context}
+            questions={activeQuestion.questions}
+            onClose={() => { setActiveQuestion(null); setInsightTarget(null); }}
+            onNavigate={(route) => { setActiveQuestion(null); setInsightTarget(null); navigate(route); }}
           />
         )}
       </div>
