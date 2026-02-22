@@ -5,7 +5,7 @@ import BottomNav from "@/components/BottomNav";
 import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
 import InlineNestorQuestions from "@/components/InlineNestorQuestions";
-import NestorBeaver from "@/components/NestorBeaver";
+import nestorDudando from "@/assets/nestor-dudando.png";
 import HealthHeart from "@/components/HealthHeart";
 
 const transactions = [
@@ -110,8 +110,8 @@ const HomeScreen = () => {
               </div>
               <p className="text-3xl font-bold text-foreground mb-1">15,908.00 €</p>
               {isNestorMode && (
-                <div className="mt-4 pt-4 border-t border-primary/20">
-                  <NestorBeaver visible score={78} />
+                <div className="mt-4 pt-4 border-t border-primary/20 flex justify-center">
+                  <img src={nestorDudando} alt="Nestor" className="w-28 h-28 object-contain" />
                 </div>
               )}
             </button>
