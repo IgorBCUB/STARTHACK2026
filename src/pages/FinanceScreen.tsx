@@ -5,6 +5,7 @@ import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
 import InlineNestorQuestions from "@/components/InlineNestorQuestions";
 import BottomNav from "@/components/BottomNav";
+import nestorCabeza from "@/assets/nestor-cabeza.png";
 
 type InsightTarget = "main-account" | "stocks" | "crypto" | null;
 
@@ -66,6 +67,16 @@ const FinanceScreen = () => {
     <div className="min-h-screen bg-background flex justify-center">
       <div className="w-full max-w-[430px] min-h-screen bg-background flex flex-col">
         <div className="px-5 pt-14 pb-2">
+          {isNestorMode && (
+            <div className="flex justify-center mb-4">
+              <img
+                src={nestorCabeza}
+                alt="Nestor"
+                className="w-16 h-16 object-contain"
+                style={{ transform: "rotate(180deg)" }}
+              />
+            </div>
+          )}
           <div className={`flex items-center justify-between mb-6 transition-opacity duration-300 ${insightTarget ? "opacity-20 pointer-events-none" : ""}`}>
             <h1 className="text-2xl font-bold text-foreground">Finances</h1>
             <div className={`flex items-center gap-3 ${isNestorMode ? "opacity-30 pointer-events-none" : ""}`}>
