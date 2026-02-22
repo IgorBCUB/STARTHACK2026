@@ -10,7 +10,7 @@ const NestorToggle = () => {
   return (
     <>
       <div
-        className={`fixed top-3 left-3 right-3 z-50 flex items-center justify-between transition-all duration-300 ${
+        className={`fixed top-3 left-3 right-3 z-[60] flex items-center justify-between transition-all duration-300 ${
           isPanelOpen ? "opacity-0 pointer-events-none" : ""
         }`}
       >
