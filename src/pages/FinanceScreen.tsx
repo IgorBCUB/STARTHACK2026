@@ -68,12 +68,11 @@ const FinanceScreen = () => {
       <div className="w-full max-w-[430px] min-h-screen bg-background flex flex-col">
         <div className="px-5 pt-14 pb-2 relative">
           {isNestorMode && (
-            <div className="absolute -top-2 left-1/2 -translate-x-1/2">
+            <div className="absolute -top-2 left-1/2 -translate-x-1/2 animate-slide-down-nestor">
               <img
                 src={nestorCabeza}
                 alt="Nestor"
                 className="w-16 h-16 object-contain"
-                style={{ transform: "rotate(180deg)" }}
               />
             </div>
           )}
