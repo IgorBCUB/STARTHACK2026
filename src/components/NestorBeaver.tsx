@@ -15,9 +15,9 @@ const getMoodImage = (score: number) => {
 };
 
 const getMoodLabel = (score: number) => {
-  if (score >= 65) return "¡Tu cartera va genial! 🚀";
-  if (score >= 35) return "Tu cartera se mantiene estable";
-  return "Tu cartera necesita atención ⚠️";
+  if (score >= 65) return "Your portfolio is doing great!";
+  if (score >= 35) return "Your portfolio is holding steady";
+  return "Your portfolio needs attention";
 };
 
 const NestorBeaver = ({ visible, score = 78 }: NestorBeaverProps) => {
