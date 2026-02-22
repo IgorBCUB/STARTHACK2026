@@ -100,7 +100,7 @@ const HomeScreen = () => {
                   <p className="text-base font-semibold text-foreground">Main account</p>
                   <span className="text-muted-foreground">⚙</span>
                 </div>
-                {isNestorMode && <HealthHeart score={78} />}
+                {isNestorMode && <HealthHeart score={52} />}
               </div>
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-muted-foreground">Personal</p>
@@ -112,8 +112,8 @@ const HomeScreen = () => {
                   <div className="relative flex-1 bg-primary/10 rounded-xl p-3 mb-4 ml-2">
                     {/* Speech bubble tail */}
                     <div className="absolute left-[-8px] bottom-4 w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-r-[8px] border-r-primary/10" />
-                    <p className="text-sm font-medium text-foreground leading-snug">¡Hola! Tu cartera está en buen estado 💪</p>
-                    <p className="text-xs text-muted-foreground mt-1">Sigue así, estás ahorrando un 54% de tus ingresos.</p>
+                    <p className="text-sm font-medium text-foreground leading-snug">Hmm, tu cartera podría mejorar 🤔</p>
+                    <p className="text-xs text-muted-foreground mt-1">Tus gastos están algo altos, revisa tus suscripciones.</p>
                   </div>
                 </div>
               }
