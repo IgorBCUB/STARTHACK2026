@@ -107,9 +107,11 @@ const HomeScreen = () => {
               </div>
               <p className="text-3xl font-bold text-foreground mb-1">15,908.00 €</p>
               {isNestorMode &&
-              <div className="mt-3 flex items-end gap-4">
-                  <img src={nestorDudando} alt="Nestor" className="w-40 h-40 object-contain drop-shadow-lg flex-shrink-0 translate-y-2" />
-                  <div className="flex-1 bg-primary/10 rounded-xl p-3 mb-4">
+              <div className="mt-3 flex items-end gap-0">
+                  <img src={nestorDudando} alt="Nestor" className="w-40 h-40 object-contain drop-shadow-lg flex-shrink-0 translate-y-2 -mr-2 relative z-10" />
+                  <div className="relative flex-1 bg-primary/10 rounded-xl p-3 mb-4 ml-2">
+                    {/* Speech bubble tail */}
+                    <div className="absolute left-[-8px] bottom-4 w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-r-[8px] border-r-primary/10" />
                     <p className="text-sm font-medium text-foreground leading-snug">¡Hola! Tu cartera está en buen estado 💪</p>
                     <p className="text-xs text-muted-foreground mt-1">Sigue así, estás ahorrando un 54% de tus ingresos.</p>
                   </div>
