@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Search, Building2, TrendingUp, Globe, BarChart3 } from "lucide-react";
+import BottomNav from "@/components/BottomNav";
 import { useState, useRef } from "react";
 import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
@@ -172,6 +173,8 @@ const ExploreScreen = () => {
             );
           })}
         </div>
+
+        <BottomNav />
 
         {/* Nestor Insight Panel - only when a question is selected */}
         {activeQuestion && (
