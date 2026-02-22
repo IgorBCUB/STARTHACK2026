@@ -4,6 +4,8 @@ import { Plus, ArrowRight, CalendarDays, Lightbulb, Eye, List, Bookmark } from "
 import BottomNav from "@/components/BottomNav";
 import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
+import NestorBeaver from "@/components/NestorBeaver";
+import HealthHeart from "@/components/HealthHeart";
 
 const transactions = [
   { name: "Spotify", category: "Subscription", amount: "-9.99 €", date: "Today", icon: "🎵" },
@@ -71,26 +73,32 @@ const HomeScreen = () => {
           </div>
 
           {/* Main account card - accessible in Nestor mode */}
-          <button
-            onClick={() => handleBoxClick("main-account")}
-            className={`w-full text-left bg-primary/15 border rounded-2xl p-5 mb-6 transition-all ${
-              isNestorMode
-                ? "border-2 border-primary/60 hover:border-primary cursor-pointer"
-                : "border-primary/30"
-            }`}
-          >
-            <div className="flex items-center justify-between mb-1">
-              <div className="flex items-center gap-2">
-                <p className="text-base font-semibold text-foreground">Main account</p>
-                <span className="text-muted-foreground">⚙</span>
+          <div className="relative mb-6">
+            <NestorBeaver visible={isNestorMode} />
+            <button
+              onClick={() => handleBoxClick("main-account")}
+              className={`w-full text-left bg-primary/15 border rounded-2xl p-5 transition-all relative z-[1] ${
+                isNestorMode
+                  ? "border-2 border-primary/60 hover:border-primary cursor-pointer"
+                  : "border-primary/30"
+              }`}
+            >
+              <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center gap-2">
+                  <p className="text-base font-semibold text-foreground">Main account</p>
+                  <span className="text-muted-foreground">⚙</span>
+                </div>
+                <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
+                  <div className="w-6 h-5 rounded-sm bg-primary/60" />
+                </div>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
-                <div className="w-6 h-5 rounded-sm bg-primary/60" />
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-xs text-muted-foreground">Personal</p>
+                {isNestorMode && <HealthHeart score={78} />}
               </div>
-            </div>
-            <p className="text-xs text-muted-foreground mb-2">Personal</p>
-            <p className="text-3xl font-bold text-foreground">15,908.00 €</p>
-          </button>
+              <p className="text-3xl font-bold text-foreground">15,908.00 €</p>
+            </button>
+          </div>
 
           {/* Quick actions - dimmed in Nestor mode */}
           <div className={`flex justify-between px-2 mb-8 ${isNestorMode ? "opacity-30 pointer-events-none" : ""}`}>
