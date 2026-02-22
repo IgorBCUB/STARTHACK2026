@@ -100,18 +100,19 @@ const HomeScreen = () => {
                   <p className="text-base font-semibold text-foreground">Main account</p>
                   <span className="text-muted-foreground">⚙</span>
                 </div>
-                
-
-
+                {isNestorMode && <HealthHeart score={78} />}
               </div>
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-muted-foreground">Personal</p>
-                {isNestorMode && <HealthHeart score={78} />}
               </div>
               <p className="text-3xl font-bold text-foreground mb-1">15,908.00 €</p>
               {isNestorMode &&
-              <div className="mt-2 flex justify-center">
-                  <img src={nestorDudando} alt="Nestor" className="w-44 h-44 object-contain drop-shadow-lg" />
+              <div className="mt-3 flex items-center gap-4">
+                  <img src={nestorDudando} alt="Nestor" className="w-28 h-28 object-contain drop-shadow-lg flex-shrink-0" />
+                  <div className="flex-1 bg-primary/10 rounded-xl p-3">
+                    <p className="text-sm font-medium text-foreground leading-snug">¡Hola! Tu cartera está en buen estado 💪</p>
+                    <p className="text-xs text-muted-foreground mt-1">Sigue así, estás ahorrando un 54% de tus ingresos.</p>
+                  </div>
                 </div>
               }
             </button>
