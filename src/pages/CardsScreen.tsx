@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Snowflake, Settings, Eye, EyeOff, Copy } from "lucide-react";
+import { Plus, Snowflake, Settings, Eye, EyeOff, Copy, ArrowRight } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
@@ -95,19 +95,54 @@ const insightData: Record<string, { context: string; questions: { label: string;
   },
 };
 
+const InlineQuestions = ({ targetKey, onSelect }: { targetKey: string; onSelect: (q: { label: string; question: string }) => void }) => {
+  const data = insightData[targetKey];
+  if (!data) return null;
+  return (
+    <div className="mt-3 space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
+      {data.questions.map((q) => (
+        <button
+          key={q.label}
+          onClick={(e) => { e.stopPropagation(); onSelect(q); }}
+          className="w-full text-left px-4 py-3 rounded-xl bg-primary/10 border border-primary/30 hover:border-primary hover:bg-primary/15 transition-all text-sm text-foreground font-medium flex items-center justify-between group"
+        >
+          {q.label}
+          <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+        </button>
+      ))}
+    </div>
+  );
+};
+
 const CardsScreen = () => {
   const navigate = useNavigate();
   const { isNestorMode } = useNestorMode();
   const [activeCard, setActiveCard] = useState(0);
   const [showNumber, setShowNumber] = useState(false);
   const [insightTarget, setInsightTarget] = useState<string | null>(null);
+  const [activeQuestion, setActiveQuestion] = useState<{ context: string; questions: { label: string; question: string }[] } | null>(null);
+
+  const handleBoxClick = (target: string) => {
+    if (isNestorMode) {
+      setInsightTarget((prev) => (prev === target ? null : target));
+    }
+  };
+
+  const handleQuestionSelect = (q: { label: string; question: string }) => {
+    if (insightTarget && insightData[insightTarget]) {
+      setActiveQuestion({
+        context: insightData[insightTarget].context,
+        questions: insightData[insightTarget].questions,
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background flex justify-center">
       <div className="w-full max-w-[430px] min-h-screen bg-background flex flex-col">
         {/* Header */}
         <div className="px-5 pt-14 pb-4">
-          <div className="flex items-center justify-between mb-6">
+          <div className={`flex items-center justify-between mb-6 transition-opacity duration-300 ${insightTarget ? "opacity-20 pointer-events-none" : ""}`}>
             <h1 className="text-2xl font-bold text-foreground">Cards</h1>
             <button className={`w-8 h-8 rounded-full bg-secondary flex items-center justify-center ${isNestorMode ? "opacity-30 pointer-events-none" : ""}`}>
               <Plus className="w-4 h-4 text-foreground" />
@@ -116,38 +151,52 @@ const CardsScreen = () => {
 
           {/* Card carousel */}
           <div className="flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory">
-            {cards.map((card, i) => (
-              <button
-                key={i}
-                onClick={() => {
-                  if (isNestorMode) {
-                    setInsightTarget(`card-${i}`);
-                  } else {
-                    setActiveCard(i);
-                  }
-                }}
-                className={`flex-shrink-0 w-[85%] snap-center rounded-2xl p-5 bg-gradient-to-br ${card.color} text-primary-foreground transition-all ${
-                  activeCard === i ? "scale-100" : "scale-95 opacity-70"
-                } ${isNestorMode ? "ring-2 ring-primary/50 cursor-pointer opacity-100" : ""}`}
-              >
-                <div className="flex items-center justify-between mb-8">
-                  <p className="text-sm font-medium opacity-80">{card.name}</p>
-                  <p className="text-xs font-bold">{card.type}</p>
+            {cards.map((card, i) => {
+              const targetKey = `card-${i}`;
+              const isSelected = insightTarget === targetKey;
+              const isDimmed = insightTarget && !isSelected;
+              return (
+                <div key={i} className={`flex-shrink-0 w-[85%] snap-center transition-opacity duration-300 ${isDimmed ? "opacity-20 pointer-events-none" : ""}`}>
+                  <button
+                    onClick={() => {
+                      if (isNestorMode) {
+                        handleBoxClick(targetKey);
+                      } else {
+                        setActiveCard(i);
+                      }
+                    }}
+                    className={`w-full rounded-2xl p-5 bg-gradient-to-br ${card.color} text-primary-foreground transition-all ${
+                      activeCard === i ? "scale-100" : "scale-95 opacity-70"
+                    } ${isNestorMode
+                      ? isSelected
+                        ? "ring-2 ring-primary ring-offset-2 ring-offset-background cursor-pointer opacity-100"
+                        : "ring-2 ring-primary/50 cursor-pointer opacity-100"
+                      : ""
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-8">
+                      <p className="text-sm font-medium opacity-80">{card.name}</p>
+                      <p className="text-xs font-bold">{card.type}</p>
+                    </div>
+                    <p className="text-lg font-mono tracking-wider mb-6">{card.number}</p>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-[10px] opacity-60">EXPIRES</p>
+                        <p className="text-sm font-medium">{card.expiry}</p>
+                      </div>
+                      <p className="text-xl font-bold">{card.balance}</p>
+                    </div>
+                  </button>
+                  {isSelected && (
+                    <InlineQuestions targetKey={targetKey} onSelect={handleQuestionSelect} />
+                  )}
                 </div>
-                <p className="text-lg font-mono tracking-wider mb-6">{card.number}</p>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-[10px] opacity-60">EXPIRES</p>
-                    <p className="text-sm font-medium">{card.expiry}</p>
-                  </div>
-                  <p className="text-xl font-bold">{card.balance}</p>
-                </div>
-              </button>
-            ))}
+              );
+            })}
           </div>
 
           {/* Card actions */}
-          <div className={`flex gap-3 mb-6 ${isNestorMode ? "opacity-30 pointer-events-none" : ""}`}>
+          <div className={`flex gap-3 mb-6 transition-opacity duration-300 ${isNestorMode ? "opacity-30 pointer-events-none" : ""} ${insightTarget ? "opacity-20 pointer-events-none" : ""}`}>
             {[
               { icon: <Snowflake className="w-4 h-4" />, label: "Freeze" },
               { icon: showNumber ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />, label: showNumber ? "Hide" : "Show", action: () => setShowNumber(!showNumber) },
@@ -166,23 +215,32 @@ const CardsScreen = () => {
           </div>
 
           {/* Spending limits */}
-          <button
-            onClick={() => isNestorMode && setInsightTarget("spending")}
-            className={`w-full text-left bg-secondary rounded-xl p-4 mb-6 transition-all ${
-              isNestorMode ? "ring-2 ring-primary/50 cursor-pointer" : ""
-            }`}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-sm font-semibold text-foreground">Monthly Spending</p>
-              <p className="text-xs text-muted-foreground">1,124 € / 2,000 €</p>
-            </div>
-            <div className="w-full h-2 rounded-full bg-muted overflow-hidden">
-              <div className="h-full bg-primary rounded-full" style={{ width: "56%" }} />
-            </div>
-          </button>
+          <div className={`mb-6 transition-opacity duration-300 ${insightTarget && insightTarget !== "spending" ? "opacity-20 pointer-events-none" : ""}`}>
+            <button
+              onClick={() => handleBoxClick("spending")}
+              className={`w-full text-left bg-secondary rounded-xl p-4 transition-all ${
+                isNestorMode
+                  ? insightTarget === "spending"
+                    ? "ring-2 ring-primary ring-offset-2 ring-offset-background cursor-pointer"
+                    : "ring-2 ring-primary/50 cursor-pointer"
+                  : ""
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm font-semibold text-foreground">Monthly Spending</p>
+                <p className="text-xs text-muted-foreground">1,124 € / 2,000 €</p>
+              </div>
+              <div className="w-full h-2 rounded-full bg-muted overflow-hidden">
+                <div className="h-full bg-primary rounded-full" style={{ width: "56%" }} />
+              </div>
+            </button>
+            {insightTarget === "spending" && (
+              <InlineQuestions targetKey="spending" onSelect={handleQuestionSelect} />
+            )}
+          </div>
 
           {/* Recent activity */}
-          <div>
+          <div className={`transition-opacity duration-300 ${insightTarget ? "opacity-20 pointer-events-none" : ""}`}>
             <p className="font-bold text-foreground mb-3">Recent Transactions</p>
             <div className={`space-y-1 ${isNestorMode ? "opacity-30 pointer-events-none" : ""}`}>
               {recentCardActivity.map((tx, i) => (
@@ -201,13 +259,13 @@ const CardsScreen = () => {
         <BottomNav />
       </div>
 
-      {/* Nestor Insight Panel */}
-      {insightTarget && insightData[insightTarget] && (
+      {/* Nestor Insight Panel - only when a question is selected */}
+      {activeQuestion && (
         <NestorInsightPanel
-          context={insightData[insightTarget].context}
-          questions={insightData[insightTarget].questions}
-          onClose={() => setInsightTarget(null)}
-          onNavigate={(route) => { setInsightTarget(null); navigate(route); }}
+          context={activeQuestion.context}
+          questions={activeQuestion.questions}
+          onClose={() => { setActiveQuestion(null); setInsightTarget(null); }}
+          onNavigate={(route) => { setActiveQuestion(null); setInsightTarget(null); navigate(route); }}
         />
       )}
     </div>
