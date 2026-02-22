@@ -31,7 +31,7 @@ const NestorToggle = () => {
           onClick={() => setIntroOpen(true)}
           className="text-xs font-semibold text-primary bg-primary/10 hover:bg-primary/20 px-3 py-1.5 rounded-full transition-colors"
         >
-          Soy Nestor! Conóceme
+          I'm Nestor! Meet me
         </button>
       </div>
 

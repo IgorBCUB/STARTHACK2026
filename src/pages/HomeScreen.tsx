@@ -115,8 +115,8 @@ const HomeScreen = () => {
                   <div className="relative flex-1 bg-primary/10 rounded-xl p-3 mb-4 ml-2">
                     {/* Speech bubble tail */}
                     <div className="absolute left-[-8px] bottom-4 w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-r-[8px] border-r-primary/10" />
-                    <p className="text-sm font-medium text-foreground leading-snug">Hmm, tu cartera podría mejorar 🤔</p>
-                    <p className="text-xs text-muted-foreground mt-1">Tus gastos están algo altos, revisa tus suscripciones.</p>
+                    <p className="text-sm font-medium text-foreground leading-snug">Hmm, your portfolio could be better</p>
+                    <p className="text-xs text-muted-foreground mt-1">Your expenses are a bit high, review your subscriptions.</p>
                   </div>
                 </div>
               }

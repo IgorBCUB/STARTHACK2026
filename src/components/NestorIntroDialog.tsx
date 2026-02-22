@@ -13,41 +13,41 @@ const NestorIntroDialog = ({ open, onOpenChange }: NestorIntroDialogProps) => {
         <div className="bg-primary/10 px-6 pt-6 pb-4 flex flex-col items-center gap-3">
           <img src={nestorHappy} alt="Nestor" className="w-28 h-28 object-contain drop-shadow-lg" />
           <DialogTitle className="text-xl font-bold text-foreground text-center">
-            Hola! Soy Nestor
+            Hi! I'm Nestor
           </DialogTitle>
         </div>
 
         <div className="px-6 pb-6 pt-2 space-y-4 max-h-[50vh] overflow-y-auto">
           <p className="text-sm text-foreground leading-relaxed">
-            Soy tu castor financiero personal. Sí, un castor. No preguntes.
+            I'm your personal financial beaver. Yes, a beaver. Don't ask.
           </p>
 
           <p className="text-sm text-foreground leading-relaxed">
-            Mi trabajo es ayudarte a entender tus finanzas de forma simple, sin dramas ni tecnicismos raros.
+            My job is to help you understand your finances in a simple way, no drama or weird jargon.
           </p>
 
           <p className="text-sm text-muted-foreground leading-relaxed font-medium">
-            <strong>Analizo tu cartera</strong> — Te digo cómo van tus inversiones y qué podrías mejorar.
+            <strong>I analyze your portfolio</strong> — I tell you how your investments are doing and what you could improve.
           </p>
 
           <p className="text-sm text-muted-foreground leading-relaxed font-medium">
-            <strong>Respondo tus dudas</strong> — Pregúntame lo que quieras sobre tus finanzas. Sin juicio.
+            <strong>I answer your questions</strong> — Ask me anything about your finances. No judgment.
           </p>
 
           <p className="text-sm text-muted-foreground leading-relaxed font-medium">
-            <strong>Vigilo tu salud financiera</strong> — Esa barrita de colores que ves arriba es cosa mía.
+            <strong>I monitor your financial health</strong> — That little color bar you see up there? That's my doing.
           </p>
 
           <p className="text-sm text-muted-foreground leading-relaxed font-medium">
-            <strong>Te doy ideas</strong> — Si veo algo interesante, te lo cuento. Soy así de majo.
+            <strong>I give you ideas</strong> — If I spot something interesting, I'll let you know. I'm nice like that.
           </p>
 
           <p className="text-sm text-foreground leading-relaxed">
-            Activa mi modo tocando el interruptor y verás cómo las cosas cobran vida.
+            Activate my mode by tapping the toggle and watch things come to life.
           </p>
 
           <p className="text-xs text-muted-foreground text-center italic">
-            PD: Construyo presas en mi tiempo libre.
+            PS: I build dams in my free time.
           </p>
         </div>
       </DialogContent>

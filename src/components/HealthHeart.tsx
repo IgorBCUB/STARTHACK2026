@@ -21,10 +21,10 @@ const HealthHeart = ({ score }: HealthHeartProps) => {
   };
 
   const getLabel = () => {
-    if (score >= 75) return "Excelente";
-    if (score >= 50) return "Bueno";
-    if (score >= 25) return "Regular";
-    return "Bajo";
+    if (score >= 75) return "Excellent";
+    if (score >= 50) return "Good";
+    if (score >= 25) return "Fair";
+    return "Low";
   };
 
   return (
