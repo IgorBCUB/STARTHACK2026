@@ -125,17 +125,17 @@ const CardsScreen = () => {
 
   return (
     <div className="min-h-screen bg-background flex justify-center">
-      <div className="w-full max-w-[430px] min-h-screen bg-background flex flex-col">
-        <div className="px-5 pt-14 pb-4 relative overflow-visible">
-          {isNestorMode && (
-            <div key="nestor-slide" className="absolute -top-2 left-1/2 -translate-x-1/2 animate-slide-down-nestor z-50">
-              <img
-                src={nestorCabeza}
-                alt="Nestor"
-                className="w-16 h-16 object-contain"
-              />
-            </div>
-          )}
+      <div className="w-full max-w-[430px] min-h-screen bg-background flex flex-col relative">
+        {isNestorMode && (
+          <div key="nestor-slide" className="absolute -top-2 left-1/2 -translate-x-1/2 animate-slide-down-nestor z-50">
+            <img
+              src={nestorCabeza}
+              alt="Nestor"
+              className="w-16 h-16 object-contain"
+            />
+          </div>
+        )}
+        <div className="px-5 pt-14 pb-4">
           <div className={`flex items-center justify-between mb-6 transition-opacity duration-300 ${insightTarget ? "opacity-20 pointer-events-none" : ""}`}>
             <h1 className="text-2xl font-bold text-foreground">Cards</h1>
             <button className={`w-8 h-8 rounded-full bg-secondary flex items-center justify-center ${isNestorMode ? "opacity-30 pointer-events-none" : ""}`}>
