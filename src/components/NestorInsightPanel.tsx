@@ -193,7 +193,7 @@ const NestorInsightPanel = ({ context, questions, initialQuestion, onClose, onNa
                 <div>
                   {/* Summary bullets */}
                   {summary && (
-                    <div className="prose prose-sm prose-invert max-w-none text-white/90 [&_p]:mb-2 [&_ul]:mb-3 [&_ol]:mb-3 [&_li]:text-white/80 [&_strong]:text-white mb-4">
+                    <div className="prose prose-sm prose-invert max-w-none text-white/90 text-justify [&_p]:mb-2 [&_ul]:mb-3 [&_ol]:mb-3 [&_li]:text-white/80 [&_strong]:text-white mb-4">
                       <ReactMarkdown>{summary}</ReactMarkdown>
                     </div>
                   )}
@@ -206,7 +206,7 @@ const NestorInsightPanel = ({ context, questions, initialQuestion, onClose, onNa
                             {section.title}
                           </AccordionTrigger>
                           <AccordionContent className="pb-3 px-0">
-                            <div className="prose prose-sm prose-invert max-w-none text-white/80 [&_p]:mb-2 [&_strong]:text-white [&_a]:text-primary [&_ul]:mb-2 [&_ol]:mb-2">
+                            <div className="prose prose-sm prose-invert max-w-none text-white/80 text-justify [&_p]:mb-2 [&_strong]:text-white [&_a]:text-primary [&_ul]:mb-2 [&_ol]:mb-2">
                               <ReactMarkdown>{section.content}</ReactMarkdown>
                             </div>
                           </AccordionContent>
