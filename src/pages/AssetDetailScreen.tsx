@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Info } from "lucide-react";
+import { ArrowLeft, Info, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
@@ -7,7 +7,8 @@ import NestorInsightPanel from "@/components/NestorInsightPanel";
 const AssetDetailScreen = () => {
   const navigate = useNavigate();
   const { isNestorMode } = useNestorMode();
-  const [showInsight, setShowInsight] = useState(false);
+  const [showQuestions, setShowQuestions] = useState(false);
+  const [activeQuestion, setActiveQuestion] = useState<{ context: string; questions: typeof questions } | null>(null);
 
   const chartPath = "M 20 120 Q 60 130, 80 110 Q 100 90, 130 100 Q 160 110, 200 85 Q 230 65, 260 90 Q 290 115, 310 60 Q 325 35, 340 45";
 
@@ -17,6 +18,17 @@ const AssetDetailScreen = () => {
     { label: "📊 How does it compare to alternatives?", question: "How does the iShares Core DAX ETF compare to other similar European index ETFs? What are the pros and cons?" },
     { label: "⚡ Is now a good time to invest more?", question: "The iShares Core DAX ETF is at €126.55 with a YTD return of +9.85%. Is now a good time to invest more?" },
   ];
+
+  const handleAskNestor = () => {
+    setShowQuestions((prev) => !prev);
+  };
+
+  const handleQuestionSelect = (q: { label: string; question: string }) => {
+    setActiveQuestion({
+      context: "Core DAX EUR (Acc) - iShares EXS1 - 126.55 €, ▲ 0.61%, YTD +9.85%",
+      questions,
+    });
+  };
 
   return (
     <div className="min-h-screen bg-background flex justify-center">
@@ -31,9 +43,7 @@ const AssetDetailScreen = () => {
           </div>
 
           {/* Asset Info */}
-          <div className={`flex flex-col items-center mb-6 ${isNestorMode ? "cursor-pointer" : ""}`}
-            onClick={() => isNestorMode && setShowInsight(true)}
-          >
+          <div className={`flex flex-col items-center mb-6 transition-opacity duration-300 ${showQuestions ? "opacity-20 pointer-events-none" : ""}`}>
             <div className={`w-14 h-14 rounded-full bg-foreground flex items-center justify-center mb-3 transition-all ${isNestorMode ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : ""}`}>
               <span className="text-[9px] font-bold text-primary-foreground leading-tight text-center">iShares</span>
             </div>
@@ -43,7 +53,7 @@ const AssetDetailScreen = () => {
           </div>
 
           {/* Chart */}
-          <div className={`relative w-full h-40 mb-4 ${isNestorMode ? "opacity-50" : ""}`}>
+          <div className={`relative w-full h-40 mb-4 transition-opacity duration-300 ${isNestorMode ? "opacity-50" : ""} ${showQuestions ? "opacity-20 pointer-events-none" : ""}`}>
             <svg viewBox="0 0 360 150" className="w-full h-full" preserveAspectRatio="none">
               <path d={chartPath} fill="none" stroke="hsl(165, 100%, 32%)" strokeWidth="2" />
             </svg>
@@ -52,7 +62,7 @@ const AssetDetailScreen = () => {
           </div>
 
           {/* Time Range */}
-          <div className={`flex rounded-lg bg-secondary overflow-hidden mb-6 ${isNestorMode ? "opacity-30 pointer-events-none" : ""}`}>
+          <div className={`flex rounded-lg bg-secondary overflow-hidden mb-6 transition-opacity duration-300 ${isNestorMode ? "opacity-30 pointer-events-none" : ""} ${showQuestions ? "opacity-20 pointer-events-none" : ""}`}>
             {["1W", "1M", "1Y", "5Y"].map((period, i) => (
               <button
                 key={period}
@@ -66,7 +76,7 @@ const AssetDetailScreen = () => {
           </div>
 
           {/* Info pills */}
-          <div className={`flex gap-2 mb-6 ${isNestorMode ? "opacity-30 pointer-events-none" : ""}`}>
+          <div className={`flex gap-2 mb-6 transition-opacity duration-300 ${isNestorMode ? "opacity-30 pointer-events-none" : ""} ${showQuestions ? "opacity-20 pointer-events-none" : ""}`}>
             <div className="flex items-center gap-2 px-4 py-2.5 bg-secondary rounded-full text-sm text-foreground">
               🐢 Start small
             </div>
@@ -76,7 +86,7 @@ const AssetDetailScreen = () => {
           </div>
 
           {/* Key Information */}
-          <div className={`mb-6 ${isNestorMode ? "opacity-30 pointer-events-none" : ""}`}>
+          <div className={`mb-6 transition-opacity duration-300 ${isNestorMode ? "opacity-30 pointer-events-none" : ""} ${showQuestions ? "opacity-20 pointer-events-none" : ""}`}>
             <h3 className="font-bold text-foreground mb-3">Key Information</h3>
             <div className="bg-secondary rounded-xl p-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -87,18 +97,39 @@ const AssetDetailScreen = () => {
             </div>
           </div>
 
-          {/* Nestor AI button (replaces invest in nestor mode) */}
+          {/* Buttons */}
           {isNestorMode ? (
             <div className="space-y-3">
               <button
-                onClick={() => setShowInsight(true)}
-                className="w-full py-4 bg-primary text-primary-foreground rounded-xl text-base font-semibold"
+                onClick={handleAskNestor}
+                className={`w-full py-4 rounded-xl text-base font-semibold transition-all ${
+                  showQuestions
+                    ? "bg-primary text-primary-foreground ring-2 ring-primary/30"
+                    : "bg-primary text-primary-foreground"
+                }`}
               >
                 🧠 Ask NestorTheInvestor
               </button>
+
+              {/* Inline questions */}
+              {showQuestions && (
+                <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                  {questions.map((q) => (
+                    <button
+                      key={q.label}
+                      onClick={() => handleQuestionSelect(q)}
+                      className="w-full text-left px-4 py-3 rounded-xl bg-primary/10 border border-primary/30 hover:border-primary hover:bg-primary/15 transition-all text-sm text-foreground font-medium flex items-center justify-between group"
+                    >
+                      {q.label}
+                      <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </button>
+                  ))}
+                </div>
+              )}
+
               <button
                 onClick={() => navigate("/invest")}
-                className="w-full py-4 bg-secondary text-foreground rounded-xl text-base font-semibold border border-primary/30"
+                className={`w-full py-4 bg-secondary text-foreground rounded-xl text-base font-semibold border border-primary/30 transition-opacity duration-300 ${showQuestions ? "opacity-20 pointer-events-none" : ""}`}
               >
                 Invest
               </button>
@@ -113,13 +144,13 @@ const AssetDetailScreen = () => {
           )}
         </div>
 
-        {/* Nestor Insight Panel */}
-        {showInsight && (
+        {/* Nestor Insight Panel - only when a question is selected */}
+        {activeQuestion && (
           <NestorInsightPanel
-            context="Core DAX EUR (Acc) - iShares EXS1 - 126.55 €, ▲ 0.61%, YTD +9.85%"
-            questions={questions}
-            onClose={() => setShowInsight(false)}
-            onNavigate={(route) => { setShowInsight(false); navigate(route); }}
+            context={activeQuestion.context}
+            questions={activeQuestion.questions}
+            onClose={() => { setActiveQuestion(null); setShowQuestions(false); }}
+            onNavigate={(route) => { setActiveQuestion(null); setShowQuestions(false); navigate(route); }}
           />
         )}
       </div>
