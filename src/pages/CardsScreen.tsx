@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Snowflake, Settings, Eye, EyeOff, Copy } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
+import nestorCabeza from "@/assets/nestor-cabeza.png";
 import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
 import InlineNestorQuestions from "@/components/InlineNestorQuestions";
@@ -125,7 +126,17 @@ const CardsScreen = () => {
   return (
     <div className="min-h-screen bg-background flex justify-center">
       <div className="w-full max-w-[430px] min-h-screen bg-background flex flex-col">
-        <div className="px-5 pt-14 pb-4">
+        <div className="px-5 pt-14 pb-4 relative">
+          {isNestorMode && (
+            <div className="absolute -top-2 left-1/2 -translate-x-1/2">
+              <img
+                src={nestorCabeza}
+                alt="Nestor"
+                className="w-16 h-16 object-contain"
+                style={{ transform: "rotate(180deg)" }}
+              />
+            </div>
+          )}
           <div className={`flex items-center justify-between mb-6 transition-opacity duration-300 ${insightTarget ? "opacity-20 pointer-events-none" : ""}`}>
             <h1 className="text-2xl font-bold text-foreground">Cards</h1>
             <button className={`w-8 h-8 rounded-full bg-secondary flex items-center justify-center ${isNestorMode ? "opacity-30 pointer-events-none" : ""}`}>
