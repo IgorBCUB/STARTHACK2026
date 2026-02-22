@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Search, Building2, TrendingUp, Globe, BarChart3 } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
+import nestorCabeza from "@/assets/nestor-cabeza.png";
 import { useState, useRef } from "react";
 import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
@@ -59,7 +60,17 @@ const ExploreScreen = () => {
     <div className="min-h-screen bg-background flex justify-center">
       <div className="w-full max-w-[430px] min-h-screen bg-background flex flex-col">
         {/* Header */}
-        <div className="px-5 pt-14 pb-4">
+        <div className="px-5 pt-14 pb-4 relative">
+          {isNestorMode && (
+            <div className="absolute -top-2 left-1/2 -translate-x-1/2">
+              <img
+                src={nestorCabeza}
+                alt="Nestor"
+                className="w-16 h-16 object-contain"
+                style={{ transform: "rotate(180deg)" }}
+              />
+            </div>
+          )}
           <div className={`flex items-center gap-4 mb-5 transition-opacity duration-300 ${selectedIndex !== null ? "opacity-20 pointer-events-none" : ""}`}>
             <button onClick={() => navigate("/")} className="text-foreground">
               <ArrowLeft className="w-6 h-6" />
