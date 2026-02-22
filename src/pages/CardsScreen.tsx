@@ -4,6 +4,7 @@ import { Plus, Snowflake, Settings, Eye, EyeOff, Copy } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
+import InlineNestorQuestions from "@/components/InlineNestorQuestions";
 
 const userProfile = {
   name: "Carlos Martínez",
@@ -106,12 +107,17 @@ const CardsScreen = () => {
   const spendingRef = useRef<HTMLButtonElement>(null);
 
   const handleBoxClick = (target: string) => {
-    if (isNestorMode && insightData[target]) {
-      const data = insightData[target];
+    if (isNestorMode) {
+      setInsightTarget((prev) => (prev === target ? null : target));
+    }
+  };
+
+  const handleQuestionSelect = (q: { label: string; question: string }) => {
+    if (insightTarget && insightData[insightTarget]) {
       setActiveQuestion({
-        context: data.context,
-        questions: data.questions,
-        selected: data.questions[0],
+        context: insightData[insightTarget].context,
+        questions: insightData[insightTarget].questions,
+        selected: q,
       });
     }
   };
@@ -166,6 +172,13 @@ const CardsScreen = () => {
                       <p className="text-xl font-bold">{card.balance}</p>
                     </div>
                   </button>
+                  {isSelected && (
+                    <InlineNestorQuestions
+                      questions={insightData[targetKey].questions}
+                      onSelect={handleQuestionSelect}
+                      anchorRef={{ current: cardRefs.current[i] }}
+                    />
+                  )}
                 </div>
               );
             })}
@@ -211,6 +224,9 @@ const CardsScreen = () => {
                 <div className="h-full bg-primary rounded-full" style={{ width: "56%" }} />
               </div>
             </button>
+            {insightTarget === "spending" && (
+              <InlineNestorQuestions questions={insightData["spending"].questions} onSelect={handleQuestionSelect} anchorRef={spendingRef} />
+            )}
           </div>
 
           {/* Recent activity */}

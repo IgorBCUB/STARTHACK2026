@@ -3,6 +3,7 @@ import { ArrowLeft, Search, Building2, TrendingUp, Globe, BarChart3 } from "luci
 import { useState, useRef } from "react";
 import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
+import InlineNestorQuestions from "@/components/InlineNestorQuestions";
 
 const etfs = [
   { name: "Core DAX (Acc)", issuer: "iShares", ticker: "EXS1", price: "127.90 €", change: "0.36 %", down: true, logo: "iShares" },
@@ -38,15 +39,19 @@ const ExploreScreen = () => {
 
   const handleAssetClick = (etf: typeof etfs[0], index: number) => {
     if (isNestorMode) {
-      const questions = getAssetQuestions(etf);
-      setActiveQuestion({
-        context: `${etf.name} (${etf.ticker}) - ${etf.price}, ${etf.down ? "▼" : "▲"} ${etf.change}`,
-        questions,
-        selected: questions[0],
-      });
+      setSelectedIndex((prev) => (prev === index ? null : index));
     } else {
       navigate("/asset");
     }
+  };
+
+  const handleQuestionSelect = (etf: typeof etfs[0], q: { label: string; question: string }) => {
+    const questions = getAssetQuestions(etf);
+    setActiveQuestion({
+      context: `${etf.name} (${etf.ticker}) - ${etf.price}, ${etf.down ? "▼" : "▲"} ${etf.change}`,
+      questions,
+      selected: q,
+    });
   };
 
   return (
@@ -156,6 +161,13 @@ const ExploreScreen = () => {
                     </p>
                   </div>
                 </button>
+                {isSelected && (
+                  <InlineNestorQuestions
+                    questions={getAssetQuestions(etf)}
+                    onSelect={(q) => handleQuestionSelect(etf, q)}
+                    anchorRef={{ current: itemRefs.current[i] }}
+                  />
+                )}
               </div>
             );
           })}

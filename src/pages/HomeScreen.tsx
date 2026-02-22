@@ -4,6 +4,7 @@ import { Plus, ArrowRight, CalendarDays, Lightbulb, Eye, List, Bookmark } from "
 import BottomNav from "@/components/BottomNav";
 import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
+import InlineNestorQuestions from "@/components/InlineNestorQuestions";
 import nestorDudando from "@/assets/nestor-dudando.png";
 import HealthHeart from "@/components/HealthHeart";
 
@@ -53,15 +54,18 @@ const HomeScreen = () => {
   const spendingRef = useRef<HTMLButtonElement>(null);
 
   const handleBoxClick = (target: InsightTarget) => {
-    if (isNestorMode && target) {
-      const data = insightQuestions[target];
-      if (data) {
-        setActiveQuestion({
-          context: data.context,
-          questions: data.questions,
-          selected: data.questions[0],
-        });
-      }
+    if (isNestorMode) {
+      setInsightTarget((prev) => prev === target ? null : target);
+    }
+  };
+
+  const handleQuestionSelect = (q: {label: string;question: string;}) => {
+    if (insightTarget && insightQuestions[insightTarget]) {
+      setActiveQuestion({
+        context: insightQuestions[insightTarget].context,
+        questions: insightQuestions[insightTarget].questions,
+        selected: q
+      });
     }
   };
 
@@ -83,7 +87,7 @@ const HomeScreen = () => {
 
 
           {/* Main account card */}
-          <div className={`relative mb-6 flex flex-col transition-opacity duration-300`}>
+          <div className={`relative mb-6 flex flex-col transition-opacity duration-300 ${insightTarget && insightTarget !== "main-account" ? "opacity-20 pointer-events-none" : ""}`}>
             <button
               ref={mainAccountRef}
               onClick={() => handleBoxClick("main-account")}
@@ -118,6 +122,9 @@ const HomeScreen = () => {
                 </div>
               }
             </button>
+            {insightTarget === "main-account" && (
+              <InlineNestorQuestions questions={insightQuestions["main-account"].questions} onSelect={handleQuestionSelect} anchorRef={mainAccountRef} />
+            )}
           </div>
 
           {/* Quick actions - hidden in Nestor mode */}
@@ -140,7 +147,7 @@ const HomeScreen = () => {
           }
 
           {/* Spending summary */}
-          <div className={`flex flex-col transition-opacity duration-300`}>
+          <div className={`flex flex-col transition-opacity duration-300 ${insightTarget && insightTarget !== "spending" ? "opacity-20 pointer-events-none" : ""}`}>
             <button
               ref={spendingRef}
               onClick={() => handleBoxClick("spending")}
@@ -164,10 +171,13 @@ const HomeScreen = () => {
               </div>
               <p className="text-[10px] text-muted-foreground mt-1">46% of income spent</p>
             </button>
+            {insightTarget === "spending" && (
+              <InlineNestorQuestions questions={insightQuestions["spending"].questions} onSelect={handleQuestionSelect} anchorRef={spendingRef} />
+            )}
           </div>
 
           {/* Transaction list */}
-          <div className={`transition-opacity duration-300`}>
+          <div className={`transition-opacity duration-300 ${insightTarget ? "opacity-20 pointer-events-none" : ""}`}>
             {Object.entries(groupedTransactions).map(([date, txs]) =>
             <div key={date} className="mb-4">
                 <div className="flex items-center justify-between mb-1">
