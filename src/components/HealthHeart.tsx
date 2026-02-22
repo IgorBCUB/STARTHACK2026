@@ -21,16 +21,16 @@ const HealthHeart = ({ score }: HealthHeartProps) => {
     return "Bajo";
   };
 
-  return (
-    <div className="flex items-center gap-1.5">
-      <Heart
-        className={`w-4 h-4 fill-current transition-all duration-700 ${getHeartColor()}`}
-      />
-      <span className="text-[10px] font-semibold text-muted-foreground">
-        {getLabel()}
-      </span>
-    </div>
-  );
+  return;
+
+
+
+
+
+
+
+
+
 };
 
 export default HealthHeart;
