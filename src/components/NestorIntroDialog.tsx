@@ -1,5 +1,5 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import nestorHappy from "@/assets/nestor-happy.png";
+import { X } from "lucide-react";
+import nestorWaving from "@/assets/nestor-waving.png";
 
 interface NestorIntroDialogProps {
   open: boolean;
@@ -7,51 +7,60 @@ interface NestorIntroDialogProps {
 }
 
 const NestorIntroDialog = ({ open, onOpenChange }: NestorIntroDialogProps) => {
+  if (!open) return null;
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[380px] rounded-2xl p-0 overflow-hidden border-primary/30">
-        <div className="bg-primary/10 px-6 pt-6 pb-4 flex flex-col items-center gap-3">
-          <img src={nestorHappy} alt="Nestor" className="w-28 h-28 object-contain drop-shadow-lg" />
-          <DialogTitle className="text-xl font-bold text-foreground text-center">
-            Hi! I'm Nestor
-          </DialogTitle>
-        </div>
+    <div className="fixed inset-0 z-[100] bg-[#1a1a1a] flex flex-col overflow-y-auto">
+      {/* Close button */}
+      <button
+        onClick={() => onOpenChange(false)}
+        className="absolute top-4 right-4 z-10 text-white/70 hover:text-white transition-colors"
+        aria-label="Close"
+      >
+        <X className="w-6 h-6" />
+      </button>
 
-        <div className="px-6 pb-6 pt-2 space-y-4 max-h-[50vh] overflow-y-auto">
-          <p className="text-sm text-foreground leading-relaxed">
-            I'm your personal financial beaver. Yes, a beaver. Don't ask.
+      {/* Content */}
+      <div className="flex-1 flex flex-col px-6 pt-12 pb-0">
+        {/* Title */}
+        <h1 className="text-[2.8rem] font-black text-white leading-none tracking-tight">
+          I'M Nestor
+        </h1>
+        <p className="text-white/60 text-sm italic mt-1 mb-8">nice to meet you</p>
+
+        {/* Body text */}
+        <div className="space-y-5 text-[0.95rem] leading-relaxed text-white/90">
+          <p>
+            I'm your personal financial beaver.
+            <br />
+            Yes, a beaver. Don't ask.
           </p>
-
-          <p className="text-sm text-foreground leading-relaxed">
-            My job is to help you understand your finances in a simple way, no drama or weird jargon.
+          <p>
+            My job is to help you understand your finances in a simple way.
           </p>
-
-          <p className="text-sm text-muted-foreground leading-relaxed font-medium">
-            <strong>I analyze your portfolio</strong> — I tell you how your investments are doing and what you could improve.
+          <p>No drama or weird jargon.</p>
+          <p>I analyze your portfolio</p>
+          <p>I answer your questions</p>
+          <p>
+            I monitor your financial health
+            <br />
+            That little color bar you see up there? That's my doing.
           </p>
-
-          <p className="text-sm text-muted-foreground leading-relaxed font-medium">
-            <strong>I answer your questions</strong> — Ask me anything about your finances. No judgment.
-          </p>
-
-          <p className="text-sm text-muted-foreground leading-relaxed font-medium">
-            <strong>I monitor your financial health</strong> — That little color bar you see up there? That's my doing.
-          </p>
-
-          <p className="text-sm text-muted-foreground leading-relaxed font-medium">
-            <strong>I give you ideas</strong> — If I spot something interesting, I'll let you know. I'm nice like that.
-          </p>
-
-          <p className="text-sm text-foreground leading-relaxed">
+          <p>
             Activate my mode by tapping the toggle and watch things come to life.
           </p>
-
-          <p className="text-xs text-muted-foreground text-center italic">
-            PS: I build dams in my free time.
-          </p>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+
+      {/* Beaver image at bottom */}
+      <div className="flex justify-center mt-auto">
+        <img
+          src={nestorWaving}
+          alt="Nestor the beaver waving"
+          className="w-64 h-auto object-contain"
+        />
+      </div>
+    </div>
   );
 };
 
