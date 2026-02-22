@@ -87,11 +87,11 @@ const HomeScreen = () => {
             <button
               ref={mainAccountRef}
               onClick={() => handleBoxClick("main-account")}
-              className={`w-full text-left bg-primary/15 border rounded-2xl p-5 transition-all ${
+              className={`w-full text-left bg-primary/15 border rounded-2xl p-5 transition-all overflow-hidden ${
               isNestorMode ?
               insightTarget === "main-account" ?
-              "border-2 border-primary ring-2 ring-primary/30 pb-6" :
-              "border-2 border-primary/60 hover:border-primary cursor-pointer pb-6" :
+              "border-2 border-primary ring-2 ring-primary/30 pb-0" :
+              "border-2 border-primary/60 hover:border-primary cursor-pointer pb-0" :
               "border-primary/30"}`
               }>
 
@@ -107,9 +107,9 @@ const HomeScreen = () => {
               </div>
               <p className="text-3xl font-bold text-foreground mb-1">15,908.00 €</p>
               {isNestorMode &&
-              <div className="mt-3 flex items-center gap-4">
-                  <img src={nestorDudando} alt="Nestor" className="w-28 h-28 object-contain drop-shadow-lg flex-shrink-0" />
-                  <div className="flex-1 bg-primary/10 rounded-xl p-3">
+              <div className="mt-3 flex items-end gap-4">
+                  <img src={nestorDudando} alt="Nestor" className="w-40 h-40 object-contain drop-shadow-lg flex-shrink-0 translate-y-6" />
+                  <div className="flex-1 bg-primary/10 rounded-xl p-3 mb-4">
                     <p className="text-sm font-medium text-foreground leading-snug">¡Hola! Tu cartera está en buen estado 💪</p>
                     <p className="text-xs text-muted-foreground mt-1">Sigue así, estás ahorrando un 54% de tus ingresos.</p>
                   </div>
