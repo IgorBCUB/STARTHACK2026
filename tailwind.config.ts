@@ -80,6 +80,7 @@ export default {
           },
           to: {
             height: "0",
+          },
         },
         "slide-down-nestor": {
           "0%": {
