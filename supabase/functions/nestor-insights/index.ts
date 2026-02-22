@@ -18,7 +18,7 @@ serve(async (req) => {
 
 CRITICAL RESPONSE FORMAT:
 1. DO NOT introduce yourself or say who you are. Jump straight into the answer.
-2. Start with a VERY SHORT summary of maximum 1 single paragraph (2-3 sentences max). No header for it, just start writing. Keep it extremely concise.
+2. Start with a VERY SHORT summary of maximum 4 lines. No header for it, just start writing. Use **bold** on the key word or phrase that directly answers the question in each sentence. Keep it extremely concise and direct.
 3. After the summary, organize the rest of the content into sections using ## headers. Each ## header will become a collapsible accordion in the UI, so make the title descriptive and clear.
 4. Keep each section concise (2-4 short paragraphs max).
 
