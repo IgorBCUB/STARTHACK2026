@@ -5,7 +5,6 @@ import BottomNav from "@/components/BottomNav";
 import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
 import InlineNestorQuestions from "@/components/InlineNestorQuestions";
-import NestorIntroDialog from "@/components/NestorIntroDialog";
 import nestorDudando from "@/assets/nestor-dudando.png";
 import HealthHeart from "@/components/HealthHeart";
 
@@ -50,7 +49,6 @@ const HomeScreen = () => {
   const { isNestorMode } = useNestorMode();
   const [insightTarget, setInsightTarget] = useState<InsightTarget>(null);
   const [activeQuestion, setActiveQuestion] = useState<{context: string;questions: {label: string;question: string;}[];selected: {label: string;question: string;};} | null>(null);
-  const [nestorIntroOpen, setNestorIntroOpen] = useState(false);
   const mainAccountRef = useRef<HTMLButtonElement>(null);
   const spendingRef = useRef<HTMLButtonElement>(null);
 
@@ -84,14 +82,8 @@ const HomeScreen = () => {
             </div>
           </div>
 
-          <div className="flex items-center mb-3">
-            <button
-              onClick={() => setNestorIntroOpen(true)}
-              className="text-xs font-semibold text-primary bg-primary/10 hover:bg-primary/20 px-3 py-1.5 rounded-full transition-colors"
-            >
-              🦫 Soy Nestor! Conóceme
-            </button>
-          </div>
+
+
 
           {/* Main account card */}
           <div className={`relative mb-6 flex flex-col transition-opacity duration-300 ${insightTarget && insightTarget !== "main-account" ? "opacity-20 pointer-events-none" : ""}`}>
@@ -222,7 +214,6 @@ const HomeScreen = () => {
           onNavigate={(route) => {setActiveQuestion(null);setInsightTarget(null);navigate(route);}} />
 
         }
-        <NestorIntroDialog open={nestorIntroOpen} onOpenChange={setNestorIntroOpen} />
       </div>
     </div>);
 
