@@ -23,7 +23,7 @@ const assets: FutureAsset[] = [
     allocation: 820,
     outlook: "bullish",
     changePercent: 12,
-    reason: "Fuerte demanda del iPhone 16 y crecimiento en servicios.",
+    reason: "Strong iPhone 16 demand and growing services revenue.",
   },
   {
     id: "msft",
@@ -33,7 +33,7 @@ const assets: FutureAsset[] = [
     allocation: 640,
     outlook: "bullish",
     changePercent: 8,
-    reason: "Liderazgo en IA con Copilot y Azure en máximos.",
+    reason: "AI leadership with Copilot and Azure at all-time highs.",
   },
   {
     id: "vwce",
@@ -43,7 +43,7 @@ const assets: FutureAsset[] = [
     allocation: 560,
     outlook: "stable",
     changePercent: 2,
-    reason: "ETF global diversificado, rendimiento estable esperado.",
+    reason: "Globally diversified ETF, stable returns expected.",
   },
   {
     id: "btc",
@@ -53,7 +53,7 @@ const assets: FutureAsset[] = [
     allocation: 680,
     outlook: "bullish",
     changePercent: 18,
-    reason: "Aprobación de ETFs spot y halving reciente impulsan demanda.",
+    reason: "Spot ETF approvals and recent halving driving demand.",
   },
   {
     id: "eth",
@@ -63,7 +63,7 @@ const assets: FutureAsset[] = [
     allocation: 382,
     outlook: "stable",
     changePercent: 3,
-    reason: "Red estable pero competencia creciente de L2s.",
+    reason: "Stable network but growing competition from L2s.",
   },
   {
     id: "tesla",
@@ -73,14 +73,14 @@ const assets: FutureAsset[] = [
     allocation: 200,
     outlook: "bearish",
     changePercent: -14,
-    reason: "Márgenes bajo presión y competencia en EV desde China.",
+    reason: "Margin pressure and EV competition from China.",
   },
 ];
 
 const outlookConfig: Record<AssetOutlook, { label: string; color: string; bgColor: string; icon: typeof TrendingUp }> = {
-  bullish: { label: "Alcista", color: "text-success", bgColor: "bg-success/10", icon: TrendingUp },
-  bearish: { label: "Bajista", color: "text-danger", bgColor: "bg-danger/10", icon: TrendingDown },
-  stable: { label: "Estable", color: "text-primary", bgColor: "bg-primary/10", icon: Minus },
+  bullish: { label: "Bullish", color: "text-success", bgColor: "bg-success/10", icon: TrendingUp },
+  bearish: { label: "Bearish", color: "text-danger", bgColor: "bg-danger/10", icon: TrendingDown },
+  stable: { label: "Stable", color: "text-primary", bgColor: "bg-primary/10", icon: Minus },
 };
 
 const PortfolioFutureScreen = () => {
@@ -138,17 +138,17 @@ const PortfolioFutureScreen = () => {
         <div className="px-5 pt-14 pb-4">
           <button onClick={() => navigate(-1)} className="mb-4 flex items-center gap-2 text-primary">
             <ArrowLeft className="w-5 h-5" />
-            <span className="text-sm font-medium">Volver</span>
+            <span className="text-sm font-medium">Back</span>
           </button>
-          <h1 className="text-2xl font-black text-foreground leading-tight">Futuro de tu Cartera</h1>
+          <h1 className="text-2xl font-black text-foreground leading-tight">Your Portfolio's Future</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Proyección basada en análisis de mercado y noticias recientes
+            Projection based on market analysis and recent news
           </p>
 
           {/* Portfolio summary bar */}
           <div className="mt-5 bg-secondary rounded-xl p-4">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Distribución de perspectiva</p>
+              <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Outlook distribution</p>
             </div>
             <div className="flex h-2 rounded-full overflow-hidden bg-muted gap-0.5">
               <div className="bg-success rounded-l-full" style={{ width: `${(bullish.length / assets.length) * 100}%` }} />
@@ -156,21 +156,21 @@ const PortfolioFutureScreen = () => {
               <div className="bg-danger rounded-r-full" style={{ width: `${(bearish.length / assets.length) * 100}%` }} />
             </div>
             <div className="flex justify-between mt-2 text-[10px] text-muted-foreground">
-              <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-success" /> {bullish.length} Alcistas</span>
-              <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-primary" /> {stable.length} Estables</span>
-              <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-danger" /> {bearish.length} Bajistas</span>
+              <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-success" /> {bullish.length} Bullish</span>
+              <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-primary" /> {stable.length} Stable</span>
+              <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-danger" /> {bearish.length} Bearish</span>
             </div>
           </div>
         </div>
 
         {/* Asset sections */}
         <div className="px-5 pb-20 flex-1">
-          {renderSection("Tendencia alcista", bullish, "bullish")}
-          {renderSection("Se mantiene estable", stable, "stable")}
-          {renderSection("Tendencia bajista", bearish, "bearish")}
+          {renderSection("Bullish trend", bullish, "bullish")}
+          {renderSection("Holding steady", stable, "stable")}
+          {renderSection("Bearish trend", bearish, "bearish")}
 
           <p className="text-[10px] text-muted-foreground text-center mt-4 leading-relaxed">
-            Las proyecciones se basan en datos de mercado, análisis de tendencias y noticias financieras de fuentes como Bloomberg, Reuters y FT. No constituyen asesoramiento financiero.
+            Projections are based on market data, trend analysis, and financial news from sources such as Bloomberg, Reuters, and FT. This does not constitute financial advice.
           </p>
         </div>
       </div>

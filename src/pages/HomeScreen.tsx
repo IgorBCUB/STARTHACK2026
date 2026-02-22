@@ -123,8 +123,8 @@ const HomeScreen = () => {
                   >
                     {/* Speech bubble tail */}
                     <div className="absolute left-[-8px] bottom-4 w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-r-[8px] border-r-primary" />
-                    <p className="text-sm font-bold text-primary-foreground leading-snug">Ver futuro de tu cartera →</p>
-                    <p className="text-xs text-primary-foreground/70 mt-0.5">Descubre qué activos subirán o bajarán</p>
+                    <p className="text-sm font-bold text-primary-foreground leading-snug">See your portfolio's future →</p>
+                    <p className="text-xs text-primary-foreground/70 mt-0.5">Find out which assets will rise or fall</p>
                   </button>
                 </div>
               }

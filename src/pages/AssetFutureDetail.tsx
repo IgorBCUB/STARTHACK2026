@@ -8,7 +8,7 @@ interface AssetData {
   currentPrice: number;
   outlook: "bullish" | "bearish" | "stable";
   historicalData: { month: string; price: number; projected?: boolean }[];
-  projectionStart: number; // index where projection begins
+  projectionStart: number;
   summary: string;
   sources: string[];
 }
@@ -22,12 +22,12 @@ const assetsDb: Record<string, AssetData> = {
     historicalData: [
       { month: "Jun 25", price: 192 }, { month: "Jul 25", price: 196 }, { month: "Aug 25", price: 210 },
       { month: "Sep 25", price: 205 }, { month: "Oct 25", price: 215 }, { month: "Nov 25", price: 220 },
-      { month: "Dic 25", price: 224 }, { month: "Ene 26", price: 222 }, { month: "Feb 26", price: 227 },
-      { month: "Mar 26", price: 235, projected: true }, { month: "Abr 26", price: 242, projected: true },
+      { month: "Dec 25", price: 224 }, { month: "Jan 26", price: 222 }, { month: "Feb 26", price: 227 },
+      { month: "Mar 26", price: 235, projected: true }, { month: "Apr 26", price: 242, projected: true },
       { month: "May 26", price: 248, projected: true }, { month: "Jun 26", price: 255, projected: true },
     ],
     projectionStart: 8,
-    summary: "Apple muestra una tendencia alcista sólida impulsada por las ventas récord del iPhone 16 y el crecimiento constante de su división de servicios, que ya representa el 25% de sus ingresos. Los analistas de Goldman Sachs y Morgan Stanley han elevado sus objetivos de precio tras los últimos resultados trimestrales. La integración de funciones de IA en el ecosistema Apple se considera un catalizador clave para los próximos trimestres.",
+    summary: "Apple shows a solid bullish trend driven by record iPhone 16 sales and steady growth in its services division, which already accounts for 25% of revenue. Analysts at Goldman Sachs and Morgan Stanley have raised their price targets following the latest quarterly results. The integration of AI features across Apple's ecosystem is seen as a key catalyst for the coming quarters.",
     sources: ["Bloomberg Intelligence, Feb 2026", "Reuters Markets, Feb 2026", "Goldman Sachs Research"],
   },
   msft: {
@@ -38,12 +38,12 @@ const assetsDb: Record<string, AssetData> = {
     historicalData: [
       { month: "Jun 25", price: 370 }, { month: "Jul 25", price: 378 }, { month: "Aug 25", price: 385 },
       { month: "Sep 25", price: 390 }, { month: "Oct 25", price: 398 }, { month: "Nov 25", price: 405 },
-      { month: "Dic 25", price: 400 }, { month: "Ene 26", price: 408 }, { month: "Feb 26", price: 415 },
-      { month: "Mar 26", price: 425, projected: true }, { month: "Abr 26", price: 435, projected: true },
+      { month: "Dec 25", price: 400 }, { month: "Jan 26", price: 408 }, { month: "Feb 26", price: 415 },
+      { month: "Mar 26", price: 425, projected: true }, { month: "Apr 26", price: 435, projected: true },
       { month: "May 26", price: 442, projected: true }, { month: "Jun 26", price: 450, projected: true },
     ],
     projectionStart: 8,
-    summary: "Microsoft mantiene su liderazgo en la carrera de la IA con Copilot integrado en todo su ecosistema Office y Azure creciendo a doble dígito. La demanda de infraestructura cloud y los contratos enterprise están en máximos históricos. Los analistas de JP Morgan destacan que la monetización de IA apenas comienza y sitúan el potencial de crecimiento en el rango del 8-12% para los próximos 6 meses.",
+    summary: "Microsoft maintains its AI leadership with Copilot integrated across its Office ecosystem and Azure growing at double digits. Demand for cloud infrastructure and enterprise contracts is at all-time highs. JP Morgan analysts highlight that AI monetization is just beginning and place the growth potential at 8-12% over the next 6 months.",
     sources: ["Financial Times, Feb 2026", "JP Morgan Equity Research", "Bloomberg Technology"],
   },
   vwce: {
@@ -54,12 +54,12 @@ const assetsDb: Record<string, AssetData> = {
     historicalData: [
       { month: "Jun 25", price: 112 }, { month: "Jul 25", price: 113 }, { month: "Aug 25", price: 114 },
       { month: "Sep 25", price: 113 }, { month: "Oct 25", price: 115 }, { month: "Nov 25", price: 116 },
-      { month: "Dic 25", price: 117 }, { month: "Ene 26", price: 117 }, { month: "Feb 26", price: 118 },
-      { month: "Mar 26", price: 119, projected: true }, { month: "Abr 26", price: 120, projected: true },
+      { month: "Dec 25", price: 117 }, { month: "Jan 26", price: 117 }, { month: "Feb 26", price: 118 },
+      { month: "Mar 26", price: 119, projected: true }, { month: "Apr 26", price: 120, projected: true },
       { month: "May 26", price: 121, projected: true }, { month: "Jun 26", price: 121, projected: true },
     ],
     projectionStart: 8,
-    summary: "Como ETF global diversificado con más de 3,700 posiciones, VWCE tiende a reflejar el rendimiento promedio del mercado mundial. Las perspectivas se mantienen estables con un crecimiento moderado del 2-3% esperado para el próximo semestre. La diversificación geográfica protege contra shocks regionales, aunque la exposición a mercados emergentes añade algo de volatilidad.",
+    summary: "As a globally diversified ETF with over 3,700 holdings, VWCE tends to mirror the average performance of the global market. The outlook remains stable with moderate growth of 2-3% expected for the next half. Geographic diversification protects against regional shocks, though exposure to emerging markets adds some volatility.",
     sources: ["Morningstar Fund Analysis, Feb 2026", "Vanguard Market Outlook Q1 2026"],
   },
   btc: {
@@ -70,12 +70,12 @@ const assetsDb: Record<string, AssetData> = {
     historicalData: [
       { month: "Jun 25", price: 68000 }, { month: "Jul 25", price: 72000 }, { month: "Aug 25", price: 71000 },
       { month: "Sep 25", price: 76000 }, { month: "Oct 25", price: 82000 }, { month: "Nov 25", price: 88000 },
-      { month: "Dic 25", price: 91000 }, { month: "Ene 26", price: 94000 }, { month: "Feb 26", price: 97420 },
-      { month: "Mar 26", price: 102000, projected: true }, { month: "Abr 26", price: 108000, projected: true },
+      { month: "Dec 25", price: 91000 }, { month: "Jan 26", price: 94000 }, { month: "Feb 26", price: 97420 },
+      { month: "Mar 26", price: 102000, projected: true }, { month: "Apr 26", price: 108000, projected: true },
       { month: "May 26", price: 112000, projected: true }, { month: "Jun 26", price: 115000, projected: true },
     ],
     projectionStart: 8,
-    summary: "Bitcoin continúa su tendencia alcista tras la aprobación de los ETFs spot en EE.UU. y el efecto del halving de abril 2024. Los flujos institucionales hacia los ETFs de Bitcoin han superado los $50B acumulados, según datos de CoinShares. Los analistas de Standard Chartered mantienen su objetivo de $120,000 para mediados de 2026, citando la escasez programada y la adopción institucional como catalizadores principales.",
+    summary: "Bitcoin continues its bullish trend following the approval of spot ETFs in the U.S. and the effect of the April 2024 halving. Institutional flows into Bitcoin ETFs have surpassed $50B cumulative, according to CoinShares data. Standard Chartered analysts maintain their $120,000 target for mid-2026, citing programmed scarcity and institutional adoption as the main catalysts.",
     sources: ["CoinShares Digital Asset Fund Flows, Feb 2026", "Reuters Crypto Markets", "Standard Chartered Research"],
   },
   eth: {
@@ -86,12 +86,12 @@ const assetsDb: Record<string, AssetData> = {
     historicalData: [
       { month: "Jun 25", price: 3100 }, { month: "Jul 25", price: 3200 }, { month: "Aug 25", price: 3150 },
       { month: "Sep 25", price: 3250 }, { month: "Oct 25", price: 3300 }, { month: "Nov 25", price: 3350 },
-      { month: "Dic 25", price: 3400 }, { month: "Ene 26", price: 3450 }, { month: "Feb 26", price: 3480 },
-      { month: "Mar 26", price: 3520, projected: true }, { month: "Abr 26", price: 3550, projected: true },
+      { month: "Dec 25", price: 3400 }, { month: "Jan 26", price: 3450 }, { month: "Feb 26", price: 3480 },
+      { month: "Mar 26", price: 3520, projected: true }, { month: "Apr 26", price: 3550, projected: true },
       { month: "May 26", price: 3580, projected: true }, { month: "Jun 26", price: 3600, projected: true },
     ],
     projectionStart: 8,
-    summary: "Ethereum se mantiene estable con un crecimiento modesto proyectado del 3-4%. Aunque la red sigue siendo líder en DeFi y NFTs, la competencia de soluciones Layer 2 como Arbitrum y Base está fragmentando la actividad. El staking de ETH proporciona rendimientos del 4% anual, lo que atrae a inversores a largo plazo. Los analistas esperan catalizadores potenciales con la adopción institucional de los ETFs de ETH.",
+    summary: "Ethereum remains stable with modest projected growth of 3-4%. While the network continues to lead in DeFi and NFTs, competition from Layer 2 solutions like Arbitrum and Base is fragmenting activity. ETH staking provides 4% annual yields, attracting long-term investors. Analysts expect potential catalysts from institutional adoption of ETH ETFs.",
     sources: ["CoinDesk Research, Feb 2026", "Messari Crypto Theses 2026"],
   },
   tesla: {
@@ -102,12 +102,12 @@ const assetsDb: Record<string, AssetData> = {
     historicalData: [
       { month: "Jun 25", price: 290 }, { month: "Jul 25", price: 285 }, { month: "Aug 25", price: 278 },
       { month: "Sep 25", price: 272 }, { month: "Oct 25", price: 268 }, { month: "Nov 25", price: 262 },
-      { month: "Dic 25", price: 258 }, { month: "Ene 26", price: 253 }, { month: "Feb 26", price: 248 },
-      { month: "Mar 26", price: 238, projected: true }, { month: "Abr 26", price: 228, projected: true },
+      { month: "Dec 25", price: 258 }, { month: "Jan 26", price: 253 }, { month: "Feb 26", price: 248 },
+      { month: "Mar 26", price: 238, projected: true }, { month: "Apr 26", price: 228, projected: true },
       { month: "May 26", price: 220, projected: true }, { month: "Jun 26", price: 214, projected: true },
     ],
     projectionStart: 8,
-    summary: "Tesla enfrenta presión en sus márgenes debido a la intensa competencia de fabricantes chinos como BYD y la ralentización del crecimiento de ventas en Europa. Los recortes de precio han impactado negativamente la rentabilidad. Analistas de Bernstein señalan que la valoración sigue siendo elevada para el ritmo actual de entregas. La división de energía muestra potencial pero no compensa la presión del negocio principal de vehículos.",
+    summary: "Tesla faces margin pressure due to intense competition from Chinese manufacturers like BYD and slowing sales growth in Europe. Price cuts have negatively impacted profitability. Bernstein analysts note that the valuation remains elevated for the current delivery pace. The energy division shows potential but doesn't offset the pressure on the core vehicle business.",
     sources: ["Bloomberg Intelligence Auto, Feb 2026", "Bernstein Research", "Financial Times Autos"],
   },
 };
@@ -120,21 +120,20 @@ const AssetFutureDetailScreen = () => {
   if (!asset) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-muted-foreground">Activo no encontrado</p>
+        <p className="text-muted-foreground">Asset not found</p>
       </div>
     );
   }
 
   const outlookColors = {
-    bullish: { stroke: "hsl(145, 63%, 42%)", fill: "hsl(145, 63%, 42%)", label: "Alcista", textColor: "text-success" },
-    bearish: { stroke: "hsl(0, 72%, 51%)", fill: "hsl(0, 72%, 51%)", label: "Bajista", textColor: "text-danger" },
-    stable: { stroke: "hsl(165, 100%, 40%)", fill: "hsl(165, 100%, 40%)", label: "Estable", textColor: "text-primary" },
+    bullish: { stroke: "hsl(145, 63%, 42%)", fill: "hsl(145, 63%, 42%)", label: "Bullish", textColor: "text-success" },
+    bearish: { stroke: "hsl(0, 72%, 51%)", fill: "hsl(0, 72%, 51%)", label: "Bearish", textColor: "text-danger" },
+    stable: { stroke: "hsl(165, 100%, 40%)", fill: "hsl(165, 100%, 40%)", label: "Stable", textColor: "text-primary" },
   };
 
   const config = outlookColors[asset.outlook];
   const projectionMonth = asset.historicalData[asset.projectionStart]?.month;
 
-  // Split data for dual area rendering
   const historicalSlice = asset.historicalData.map((d, i) => ({
     ...d,
     historical: i <= asset.projectionStart ? d.price : undefined,
@@ -152,7 +151,7 @@ const AssetFutureDetailScreen = () => {
         <div className="px-5 pt-14 pb-2">
           <button onClick={() => navigate(-1)} className="mb-4 flex items-center gap-2 text-primary">
             <ArrowLeft className="w-5 h-5" />
-            <span className="text-sm font-medium">Cartera</span>
+            <span className="text-sm font-medium">Portfolio</span>
           </button>
           <div className="flex items-center justify-between">
             <div>
@@ -206,7 +205,7 @@ const AssetFutureDetailScreen = () => {
                     stroke="hsl(0,0%,40%)"
                     strokeDasharray="4 4"
                     strokeWidth={1}
-                    label={{ value: "Proyección", position: "top", fontSize: 9, fill: "hsl(0,0%,50%)" }}
+                    label={{ value: "Projection", position: "top", fontSize: 9, fill: "hsl(0,0%,50%)" }}
                   />
                 )}
                 <Area
@@ -233,28 +232,28 @@ const AssetFutureDetailScreen = () => {
           </div>
           <div className="flex items-center justify-center gap-4 mt-1 text-[10px] text-muted-foreground">
             <span className="flex items-center gap-1">
-              <span className="w-4 h-0.5 rounded" style={{ backgroundColor: config.stroke }} /> Histórico
+              <span className="w-4 h-0.5 rounded" style={{ backgroundColor: config.stroke }} /> Historical
             </span>
             <span className="flex items-center gap-1">
-              <span className="w-4 h-0.5 rounded border-dashed border-t-2" style={{ borderColor: config.stroke }} /> Proyección
+              <span className="w-4 h-0.5 rounded border-dashed border-t-2" style={{ borderColor: config.stroke }} /> Projection
             </span>
           </div>
         </div>
 
         {/* Analysis */}
         <div className="px-5 pt-4 pb-20 flex-1">
-          <h2 className="text-base font-bold text-foreground mb-2">Análisis y perspectiva</h2>
+          <h2 className="text-base font-bold text-foreground mb-2">Analysis & Outlook</h2>
           <p className="text-sm text-foreground/80 leading-relaxed text-justify">{asset.summary}</p>
 
           <div className="mt-5 pt-4 border-t border-border">
-            <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide mb-2">Fuentes</p>
+            <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide mb-2">Sources</p>
             {asset.sources.map((s, i) => (
               <p key={i} className="text-[11px] text-muted-foreground leading-relaxed">• {s}</p>
             ))}
           </div>
 
           <p className="text-[9px] text-muted-foreground/60 text-center mt-6">
-            Esta información es orientativa y no constituye asesoramiento financiero.
+            This information is for guidance only and does not constitute financial advice.
           </p>
         </div>
       </div>
