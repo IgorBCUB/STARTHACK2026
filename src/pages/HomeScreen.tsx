@@ -100,9 +100,9 @@ const HomeScreen = () => {
                   <p className="text-base font-semibold text-foreground">Main account</p>
                   <span className="text-muted-foreground">⚙</span>
                 </div>
-                <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
-                  
-                </div>
+                
+
+
               </div>
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-muted-foreground">Personal</p>
