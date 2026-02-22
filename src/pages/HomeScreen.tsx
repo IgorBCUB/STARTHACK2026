@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, ArrowRight, CalendarDays, Lightbulb, Eye, List, Bookmark } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
+import InlineNestorQuestions from "@/components/InlineNestorQuestions";
 import NestorBeaver from "@/components/NestorBeaver";
 import HealthHeart from "@/components/HealthHeart";
 
@@ -15,7 +16,6 @@ const transactions = [
   { name: "Netflix", category: "Subscription", amount: "-12.99 €", date: "Feb 17", icon: "🎬" },
 ];
 
-// Group transactions by date
 const groupedTransactions = transactions.reduce<Record<string, typeof transactions>>((acc, tx) => {
   const key = tx.date.toUpperCase();
   if (!acc[key]) acc[key] = [];
@@ -49,6 +49,8 @@ const HomeScreen = () => {
   const { isNestorMode } = useNestorMode();
   const [insightTarget, setInsightTarget] = useState<InsightTarget>(null);
   const [activeQuestion, setActiveQuestion] = useState<{ context: string; questions: { label: string; question: string }[]; selected: { label: string; question: string } } | null>(null);
+  const mainAccountRef = useRef<HTMLButtonElement>(null);
+  const spendingRef = useRef<HTMLButtonElement>(null);
 
   const handleBoxClick = (target: InsightTarget) => {
     if (isNestorMode) {
@@ -69,7 +71,6 @@ const HomeScreen = () => {
   return (
     <div className="min-h-screen bg-background flex justify-center">
       <div className="w-full max-w-[430px] min-h-screen bg-background flex flex-col">
-        {/* Header */}
         <div className="px-5 pt-14 pb-16">
           <div className="flex items-center justify-between mb-5">
             <h1 className="text-2xl font-bold text-foreground">Home</h1>
@@ -77,15 +78,14 @@ const HomeScreen = () => {
               <Eye className="w-5 h-5 text-muted-foreground" />
               <List className="w-5 h-5 text-muted-foreground" />
               <Bookmark className="w-5 h-5 text-muted-foreground" />
-              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-[10px] font-bold text-primary-foreground">
-                ND
-              </div>
+              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-[10px] font-bold text-primary-foreground">ND</div>
             </div>
           </div>
 
-          {/* Main account card - accessible in Nestor mode */}
-          <div className={`relative mb-6 transition-opacity duration-300 ${insightTarget && insightTarget !== "main-account" ? "opacity-20 pointer-events-none" : ""}`}>
+          {/* Main account card */}
+          <div className={`relative mb-6 flex flex-col transition-opacity duration-300 ${insightTarget && insightTarget !== "main-account" ? "opacity-20 pointer-events-none" : ""}`}>
             <button
+              ref={mainAccountRef}
               onClick={() => handleBoxClick("main-account")}
               className={`w-full text-left bg-primary/15 border rounded-2xl p-5 transition-all ${
                 isNestorMode
@@ -109,29 +109,14 @@ const HomeScreen = () => {
                 {isNestorMode && <HealthHeart score={78} />}
               </div>
               <p className="text-3xl font-bold text-foreground mb-1">15,908.00 €</p>
-
-              {/* Nestor beaver inside the card */}
               {isNestorMode && (
                 <div className="mt-4 pt-4 border-t border-primary/20">
                   <NestorBeaver visible score={78} />
                 </div>
               )}
             </button>
-
-            {/* Inline questions for main-account */}
-            {insightTarget === "main-account" && insightQuestions["main-account"] && (
-              <div className="mt-3 space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                {insightQuestions["main-account"].questions.map((q) => (
-                  <button
-                    key={q.label}
-                    onClick={() => handleQuestionSelect(q)}
-                    className="w-full text-left px-4 py-3 rounded-xl bg-primary/10 border border-primary/30 hover:border-primary hover:bg-primary/15 transition-all text-sm text-foreground font-medium flex items-center justify-between group"
-                  >
-                    {q.label}
-                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                  </button>
-                ))}
-              </div>
+            {insightTarget === "main-account" && (
+              <InlineNestorQuestions questions={insightQuestions["main-account"].questions} onSelect={handleQuestionSelect} anchorRef={mainAccountRef} />
             )}
           </div>
 
@@ -145,28 +130,19 @@ const HomeScreen = () => {
                 { icon: <Lightbulb className="w-5 h-5" />, label: "Insights" },
               ].map((action) => (
                 <div key={action.label} className="flex flex-col items-center gap-2">
-                  <div
-                    className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                      action.filled
-                        ? "bg-primary text-primary-foreground"
-                        : action.outlined
-                          ? "border-2 border-primary text-primary"
-                          : "border border-border text-foreground"
-                    }`}
-                  >
-                    {action.icon}
-                  </div>
-                  <span className="text-[10px] font-medium text-foreground text-center leading-tight w-16">
-                    {action.label}
-                  </span>
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                    action.filled ? "bg-primary text-primary-foreground" : action.outlined ? "border-2 border-primary text-primary" : "border border-border text-foreground"
+                  }`}>{action.icon}</div>
+                  <span className="text-[10px] font-medium text-foreground text-center leading-tight w-16">{action.label}</span>
                 </div>
               ))}
             </div>
           )}
 
-          {/* Spending summary - accessible in Nestor mode */}
-          <div className={`transition-opacity duration-300 ${insightTarget && insightTarget !== "spending" ? "opacity-20 pointer-events-none" : ""}`}>
+          {/* Spending summary */}
+          <div className={`flex flex-col transition-opacity duration-300 ${insightTarget && insightTarget !== "spending" ? "opacity-20 pointer-events-none" : ""}`}>
             <button
+              ref={spendingRef}
               onClick={() => handleBoxClick("spending")}
               className={`w-full text-left bg-secondary rounded-xl p-4 mb-3 transition-all ${
                 isNestorMode
@@ -188,51 +164,32 @@ const HomeScreen = () => {
               </div>
               <p className="text-[10px] text-muted-foreground mt-1">46% of income spent</p>
             </button>
-
-            {/* Inline questions for spending */}
-            {insightTarget === "spending" && insightQuestions["spending"] && (
-              <div className="mb-4 space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                {insightQuestions["spending"].questions.map((q) => (
-                  <button
-                    key={q.label}
-                    onClick={() => handleQuestionSelect(q)}
-                    className="w-full text-left px-4 py-3 rounded-xl bg-primary/10 border border-primary/30 hover:border-primary hover:bg-primary/15 transition-all text-sm text-foreground font-medium flex items-center justify-between group"
-                  >
-                    {q.label}
-                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                  </button>
-                ))}
-              </div>
+            {insightTarget === "spending" && (
+              <InlineNestorQuestions questions={insightQuestions["spending"].questions} onSelect={handleQuestionSelect} anchorRef={spendingRef} />
             )}
           </div>
 
-          {/* Transaction list - dimmed in Nestor mode or when insight is active */}
+          {/* Transaction list */}
           <div className={`transition-opacity duration-300 ${insightTarget ? "opacity-20 pointer-events-none" : ""}`}>
             {Object.entries(groupedTransactions).map(([date, txs]) => (
               <div key={date} className="mb-4">
                 <div className="flex items-center justify-between mb-1">
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{date}</p>
                   {date === "TODAY" && (
-                    <button className={`text-xs text-primary font-medium ${isNestorMode ? "opacity-30 pointer-events-none" : ""}`}>
-                      see all
-                    </button>
+                    <button className={`text-xs text-primary font-medium ${isNestorMode ? "opacity-30 pointer-events-none" : ""}`}>see all</button>
                   )}
                 </div>
                 <div className={isNestorMode ? "opacity-30 pointer-events-none" : ""}>
                   {txs.map((tx, i) => (
                     <div key={i} className="flex items-center justify-between py-3.5 border-b border-border last:border-b-0">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-secondary border border-border flex items-center justify-center text-sm">
-                          {tx.icon}
-                        </div>
+                        <div className="w-10 h-10 rounded-full bg-secondary border border-border flex items-center justify-center text-sm">{tx.icon}</div>
                         <div>
                           <p className="text-sm font-medium text-foreground">{tx.name}</p>
                           <p className="text-xs text-muted-foreground">{tx.category}</p>
                         </div>
                       </div>
-                      <p className={`text-sm font-medium ${tx.positive ? "text-success" : "text-foreground"}`}>
-                        {tx.amount}
-                      </p>
+                      <p className={`text-sm font-medium ${tx.positive ? "text-success" : "text-foreground"}`}>{tx.amount}</p>
                     </div>
                   ))}
                 </div>
@@ -243,7 +200,6 @@ const HomeScreen = () => {
 
         <BottomNav />
 
-        {/* Nestor Insight Panel - only when a question is selected */}
         {activeQuestion && (
           <NestorInsightPanel
             context={activeQuestion.context}
