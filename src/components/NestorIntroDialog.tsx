@@ -10,55 +10,51 @@ const NestorIntroDialog = ({ open, onOpenChange }: NestorIntroDialogProps) => {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-[#1a1a1a] flex flex-col overflow-y-auto">
-      {/* Close button */}
-      <button
-        onClick={() => onOpenChange(false)}
-        className="absolute top-4 right-4 z-10 text-white/70 hover:text-white transition-colors"
-        aria-label="Close"
-      >
-        <X className="w-6 h-6" />
-      </button>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4">
+      <div className="relative bg-[#1a1a1a] rounded-2xl w-full max-w-[380px] max-h-[85vh] flex flex-col overflow-hidden shadow-2xl">
+        {/* Close button */}
+        <button
+          onClick={() => onOpenChange(false)}
+          className="absolute top-3 right-3 z-10 text-white/60 hover:text-white transition-colors"
+          aria-label="Close"
+        >
+          <X className="w-5 h-5" />
+        </button>
 
-      {/* Content */}
-      <div className="flex-1 flex flex-col px-6 pt-12 pb-0">
-        {/* Title */}
-        <h1 className="text-[2.8rem] font-black text-white leading-none tracking-tight">
-          I'M Nestor
-        </h1>
-        <p className="text-white/60 text-sm italic mt-1 mb-8">nice to meet you</p>
+        {/* Scrollable content */}
+        <div className="flex-1 overflow-y-auto px-6 pt-10 pb-4">
+          <h1 className="text-[2.4rem] font-black text-white leading-none tracking-tight">
+            I'M Nestor
+          </h1>
+          <p className="text-white/50 text-xs italic mt-1 mb-6">nice to meet you</p>
 
-        {/* Body text */}
-        <div className="space-y-5 text-[0.95rem] leading-relaxed text-white/90">
-          <p>
-            I'm your personal financial beaver.
-            <br />
-            Yes, a beaver. Don't ask.
-          </p>
-          <p>
-            My job is to help you understand your finances in a simple way.
-          </p>
-          <p>No drama or weird jargon.</p>
-          <p>I analyze your portfolio</p>
-          <p>I answer your questions</p>
-          <p>
-            I monitor your financial health
-            <br />
-            That little color bar you see up there? That's my doing.
-          </p>
-          <p>
-            Activate my mode by tapping the toggle and watch things come to life.
-          </p>
+          <div className="space-y-4 text-[0.9rem] leading-relaxed text-white/85">
+            <p>
+              I'm your personal financial beaver.
+              <br />
+              Yes, a beaver. Don't ask.
+            </p>
+            <p>My job is to help you understand your finances in a simple way.</p>
+            <p>No drama or weird jargon.</p>
+            <p>I analyze your portfolio</p>
+            <p>I answer your questions</p>
+            <p>
+              I monitor your financial health
+              <br />
+              That little color bar you see up there? That's my doing.
+            </p>
+            <p>Activate my mode by tapping the toggle and watch things come to life.</p>
+          </div>
         </div>
-      </div>
 
-      {/* Beaver image at bottom */}
-      <div className="flex justify-center mt-auto">
-        <img
-          src={nestorWaving}
-          alt="Nestor the beaver waving"
-          className="w-64 h-auto object-contain"
-        />
+        {/* Beaver image */}
+        <div className="flex justify-center px-4 pb-2">
+          <img
+            src={nestorWaving}
+            alt="Nestor the beaver waving"
+            className="w-48 h-auto object-contain"
+          />
+        </div>
       </div>
     </div>
   );
