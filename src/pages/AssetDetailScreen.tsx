@@ -9,7 +9,7 @@ const AssetDetailScreen = () => {
   const navigate = useNavigate();
   const { isNestorMode } = useNestorMode();
   const [showQuestions, setShowQuestions] = useState(false);
-  const [activeQuestion, setActiveQuestion] = useState<{ context: string; questions: typeof questions } | null>(null);
+  const [activeQuestion, setActiveQuestion] = useState<{ context: string; questions: typeof questions; selected: typeof questions[0] } | null>(null);
   const askButtonRef = useRef<HTMLButtonElement>(null);
 
   const chartPath = "M 20 120 Q 60 130, 80 110 Q 100 90, 130 100 Q 160 110, 200 85 Q 230 65, 260 90 Q 290 115, 310 60 Q 325 35, 340 45";
@@ -29,6 +29,7 @@ const AssetDetailScreen = () => {
     setActiveQuestion({
       context: "Core DAX EUR (Acc) - iShares EXS1 - 126.55 €, ▲ 0.61%, YTD +9.85%",
       questions,
+      selected: q,
     });
   };
 
@@ -120,6 +121,7 @@ const AssetDetailScreen = () => {
           <NestorInsightPanel
             context={activeQuestion.context}
             questions={activeQuestion.questions}
+            initialQuestion={activeQuestion.selected}
             onClose={() => { setActiveQuestion(null); setShowQuestions(false); }}
             onNavigate={(route) => { setActiveQuestion(null); setShowQuestions(false); navigate(route); }}
           />

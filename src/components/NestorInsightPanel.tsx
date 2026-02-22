@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { X, Sparkles, ArrowRight, Loader2 } from "lucide-react";
+import { X, Sparkles, ArrowRight, Loader2, ChevronDown } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useNestorMode } from "@/contexts/NestorModeContext";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 
 interface QuestionOption {
   label: string;
@@ -12,15 +13,52 @@ interface QuestionOption {
 interface NestorInsightPanelProps {
   context: string;
   questions: QuestionOption[];
+  initialQuestion?: QuestionOption;
   onClose: () => void;
   onNavigate?: (route: string) => void;
 }
 
 const FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/nestor-insights`;
 
-const NestorInsightPanel = ({ context, questions, onClose, onNavigate }: NestorInsightPanelProps) => {
+/** Parse response into summary bullets and accordion sections */
+function parseResponse(text: string) {
+  // Split off sources at the end
+  const sourceMarkers = ["⚠️", "Fuentes:", "Sources:", "Referencias:"];
+  const splitIndex = sourceMarkers.reduce((idx, marker) => {
+    const i = text.lastIndexOf(marker);
+    return i !== -1 && (idx === -1 || i < idx) ? i : idx;
+  }, -1);
+  const mainContent = splitIndex !== -1 ? text.slice(0, splitIndex).trim() : text;
+  const sources = splitIndex !== -1 ? text.slice(splitIndex).trim() : null;
+
+  // Split main content into summary (before first ##) and sections
+  const sectionRegex = /^## .+$/gm;
+  const firstMatch = sectionRegex.exec(mainContent);
+
+  let summary = "";
+  let sections: { title: string; content: string }[] = [];
+
+  if (firstMatch) {
+    summary = mainContent.slice(0, firstMatch.index).trim();
+    const rest = mainContent.slice(firstMatch.index);
+    // Split into sections by ## headers
+    const parts = rest.split(/^## /gm).filter(Boolean);
+    sections = parts.map((part) => {
+      const newline = part.indexOf("\n");
+      const title = newline !== -1 ? part.slice(0, newline).trim() : part.trim();
+      const content = newline !== -1 ? part.slice(newline + 1).trim() : "";
+      return { title, content };
+    });
+  } else {
+    summary = mainContent;
+  }
+
+  return { summary, sections, sources };
+}
+
+const NestorInsightPanel = ({ context, questions, initialQuestion, onClose, onNavigate }: NestorInsightPanelProps) => {
   const { setIsPanelOpen } = useNestorMode();
-  const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
+  const [selectedQuestion, setSelectedQuestion] = useState<string | null>(initialQuestion?.label ?? null);
   const [response, setResponse] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -29,16 +67,15 @@ const NestorInsightPanel = ({ context, questions, onClose, onNavigate }: NestorI
     return () => setIsPanelOpen(false);
   }, [setIsPanelOpen]);
 
-  // Split response into main content and sources
-  const sourceMarkers = ["⚠️", "Fuentes:", "Sources:", "Referencias:"];
-  const splitIndex = sourceMarkers.reduce((idx, marker) => {
-    const i = response.lastIndexOf(marker);
-    return i !== -1 && (idx === -1 || i < idx) ? i : idx;
-  }, -1);
-  const mainContent = splitIndex !== -1 ? response.slice(0, splitIndex).trim() : response;
-  const sources = splitIndex !== -1 ? response.slice(splitIndex).trim() : null;
+  // Auto-fetch if initialQuestion is provided
+  useEffect(() => {
+    if (initialQuestion) {
+      fetchAnswer(initialQuestion);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const handleQuestionClick = async (q: QuestionOption) => {
+  const fetchAnswer = async (q: QuestionOption) => {
     setSelectedQuestion(q.label);
     setResponse("");
     setIsLoading(true);
@@ -98,6 +135,12 @@ const NestorInsightPanel = ({ context, questions, onClose, onNavigate }: NestorI
     }
   };
 
+  const handleQuestionClick = (q: QuestionOption) => {
+    fetchAnswer(q);
+  };
+
+  const { summary, sections, sources } = parseResponse(response);
+
   return (
     <div className="fixed inset-0 z-40 flex items-end justify-center">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
@@ -147,8 +190,30 @@ const NestorInsightPanel = ({ context, questions, onClose, onNavigate }: NestorI
                 </div>
               )}
               {response && (
-                <div className="prose prose-sm prose-invert max-w-none text-white/90 text-justify [&_h1]:text-primary [&_h1]:font-bold [&_h1]:mt-5 [&_h1]:mb-2 [&_h2]:text-primary [&_h2]:font-bold [&_h2]:mt-5 [&_h2]:mb-2 [&_h3]:text-primary [&_h3]:font-bold [&_h3]:mt-5 [&_h3]:mb-2 [&_p]:mb-3 [&_strong]:text-white [&_a]:text-primary [&_ul]:mb-3 [&_ol]:mb-3">
-                  <ReactMarkdown>{mainContent}</ReactMarkdown>
+                <div>
+                  {/* Summary bullets */}
+                  {summary && (
+                    <div className="prose prose-sm prose-invert max-w-none text-white/90 [&_p]:mb-2 [&_ul]:mb-3 [&_ol]:mb-3 [&_li]:text-white/80 [&_strong]:text-white mb-4">
+                      <ReactMarkdown>{summary}</ReactMarkdown>
+                    </div>
+                  )}
+                  {/* Accordion sections */}
+                  {sections.length > 0 && (
+                    <Accordion type="multiple" className="space-y-2">
+                      {sections.map((section, i) => (
+                        <AccordionItem key={i} value={`section-${i}`} className="border border-white/10 rounded-xl overflow-hidden bg-white/5">
+                          <AccordionTrigger className="px-4 py-3 text-sm font-semibold text-primary hover:no-underline">
+                            {section.title}
+                          </AccordionTrigger>
+                          <AccordionContent className="px-4 pb-3">
+                            <div className="prose prose-sm prose-invert max-w-none text-white/80 [&_p]:mb-2 [&_strong]:text-white [&_a]:text-primary [&_ul]:mb-2 [&_ol]:mb-2">
+                              <ReactMarkdown>{section.content}</ReactMarkdown>
+                            </div>
+                          </AccordionContent>
+                        </AccordionItem>
+                      ))}
+                    </Accordion>
+                  )}
                 </div>
               )}
               {/* Action buttons after response */}
