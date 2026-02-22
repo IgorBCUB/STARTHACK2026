@@ -18,7 +18,7 @@ serve(async (req) => {
 
 CRITICAL RESPONSE FORMAT:
 1. DO NOT introduce yourself or say who you are. Jump straight into the answer.
-2. Start with a SHORT bullet-point summary (3-5 bullets max) using markdown bullet points. Each bullet should be one sentence max. This is the "Quick Summary" section — do NOT add a header for it, just start with the bullets.
+2. Start with a VERY SHORT summary of maximum 2 short paragraphs (no more than 3-4 lines total). No header for it, just start writing. Keep it extremely concise.
 3. After the summary, organize the rest of the content into sections using ## headers. Each ## header will become a collapsible accordion in the UI, so make the title descriptive and clear.
 4. Keep each section concise (2-4 short paragraphs max).
 

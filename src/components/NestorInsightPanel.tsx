@@ -199,13 +199,13 @@ const NestorInsightPanel = ({ context, questions, initialQuestion, onClose, onNa
                   )}
                   {/* Accordion sections */}
                   {sections.length > 0 && (
-                    <Accordion type="multiple" className="space-y-2">
+                    <Accordion type="multiple" className="">
                       {sections.map((section, i) => (
-                        <AccordionItem key={i} value={`section-${i}`} className="border border-white/10 rounded-xl overflow-hidden bg-white/5">
-                          <AccordionTrigger className="px-4 py-3 text-sm font-semibold text-primary hover:no-underline">
+                        <AccordionItem key={i} value={`section-${i}`} className="border-b border-white/10 border-t-0 border-x-0 rounded-none last:border-b-0">
+                          <AccordionTrigger className="py-3 text-sm font-semibold text-primary hover:no-underline px-0">
                             {section.title}
                           </AccordionTrigger>
-                          <AccordionContent className="px-4 pb-3">
+                          <AccordionContent className="pb-3 px-0">
                             <div className="prose prose-sm prose-invert max-w-none text-white/80 [&_p]:mb-2 [&_strong]:text-white [&_a]:text-primary [&_ul]:mb-2 [&_ol]:mb-2">
                               <ReactMarkdown>{section.content}</ReactMarkdown>
                             </div>
