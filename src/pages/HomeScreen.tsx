@@ -115,12 +115,12 @@ const HomeScreen = () => {
                   <img src={nestorDudando} alt="Nestor" className="w-40 h-40 object-contain drop-shadow-lg flex-shrink-0 translate-y-2 -mr-2 relative z-10" />
                   <button
                     onClick={(e) => { e.stopPropagation(); navigate("/portfolio-future"); }}
-                    className="relative flex-1 bg-primary/10 rounded-xl p-3 mb-4 ml-2 text-left hover:bg-primary/20 transition-colors active:scale-[0.97]"
+                    className="relative flex-1 bg-primary rounded-xl p-3 mb-4 ml-2 text-left hover:bg-primary/90 transition-all active:scale-[0.97] shadow-lg shadow-primary/30"
                   >
                     {/* Speech bubble tail */}
-                    <div className="absolute left-[-8px] bottom-4 w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-r-[8px] border-r-primary/10" />
-                    <p className="text-sm font-medium text-foreground leading-snug">Hmm, tu cartera podría mejorar</p>
-                    <p className="text-xs text-muted-foreground mt-1">Toca aquí para ver el futuro de tus activos →</p>
+                    <div className="absolute left-[-8px] bottom-4 w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-r-[8px] border-r-primary" />
+                    <p className="text-sm font-bold text-primary-foreground leading-snug">Ver futuro de tu cartera →</p>
+                    <p className="text-xs text-primary-foreground/70 mt-0.5">Descubre qué activos subirán o bajarán</p>
                   </button>
                 </div>
               }
