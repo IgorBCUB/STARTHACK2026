@@ -3,7 +3,6 @@ import { ArrowLeft, Search, Building2, TrendingUp, Globe, BarChart3 } from "luci
 import { useState, useRef } from "react";
 import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
-import InlineNestorQuestions from "@/components/InlineNestorQuestions";
 
 const etfs = [
   { name: "Core DAX (Acc)", issuer: "iShares", ticker: "EXS1", price: "127.90 €", change: "0.36 %", down: true, logo: "iShares" },
@@ -34,22 +33,20 @@ const ExploreScreen = () => {
   const [activeTab, setActiveTab] = useState<"stocks" | "etfs">("etfs");
   const { isNestorMode } = useNestorMode();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const [activeQuestion, setActiveQuestion] = useState<{ context: string; questions: { label: string; question: string }[] } | null>(null);
+  const [activeQuestion, setActiveQuestion] = useState<{ context: string; questions: { label: string; question: string }[]; selected: { label: string; question: string } } | null>(null);
   const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const handleAssetClick = (etf: typeof etfs[0], index: number) => {
     if (isNestorMode) {
-      setSelectedIndex((prev) => (prev === index ? null : index));
+      const questions = getAssetQuestions(etf);
+      setActiveQuestion({
+        context: `${etf.name} (${etf.ticker}) - ${etf.price}, ${etf.down ? "▼" : "▲"} ${etf.change}`,
+        questions,
+        selected: questions[0],
+      });
     } else {
       navigate("/asset");
     }
-  };
-
-  const handleQuestionSelect = (etf: typeof etfs[0], q: { label: string; question: string }) => {
-    setActiveQuestion({
-      context: `${etf.name} (${etf.ticker}) - ${etf.price}, ${etf.down ? "▼" : "▲"} ${etf.change}`,
-      questions: getAssetQuestions(etf),
-    });
   };
 
   return (
@@ -159,13 +156,6 @@ const ExploreScreen = () => {
                     </p>
                   </div>
                 </button>
-                {isSelected && (
-                  <InlineNestorQuestions
-                    questions={getAssetQuestions(etf)}
-                    onSelect={(q) => handleQuestionSelect(etf, q)}
-                    anchorRef={{ current: itemRefs.current[i] }}
-                  />
-                )}
               </div>
             );
           })}
@@ -176,6 +166,7 @@ const ExploreScreen = () => {
           <NestorInsightPanel
             context={activeQuestion.context}
             questions={activeQuestion.questions}
+            initialQuestion={activeQuestion.selected}
             onClose={() => { setActiveQuestion(null); setSelectedIndex(null); }}
             onNavigate={(route) => { setActiveQuestion(null); setSelectedIndex(null); navigate(route); }}
           />

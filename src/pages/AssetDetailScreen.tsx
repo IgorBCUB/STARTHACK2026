@@ -3,7 +3,6 @@ import { ArrowLeft, Info } from "lucide-react";
 import { useState, useRef } from "react";
 import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
-import InlineNestorQuestions from "@/components/InlineNestorQuestions";
 
 const AssetDetailScreen = () => {
   const navigate = useNavigate();
@@ -22,14 +21,10 @@ const AssetDetailScreen = () => {
   ];
 
   const handleAskNestor = () => {
-    setShowQuestions((prev) => !prev);
-  };
-
-  const handleQuestionSelect = (q: { label: string; question: string }) => {
     setActiveQuestion({
       context: "Core DAX EUR (Acc) - iShares EXS1 - 126.55 €, ▲ 0.61%, YTD +9.85%",
       questions,
-      selected: q,
+      selected: questions[0],
     });
   };
 
@@ -86,26 +81,15 @@ const AssetDetailScreen = () => {
           {isNestorMode ? (
             <div className="flex flex-col space-y-3">
               <button
-                ref={askButtonRef}
                 onClick={handleAskNestor}
-                className={`w-full py-4 rounded-xl text-base font-semibold transition-all ${
-                  showQuestions ? "bg-primary text-primary-foreground ring-2 ring-primary/30" : "bg-primary text-primary-foreground"
-                }`}
+                className="w-full py-4 rounded-xl text-base font-semibold bg-primary text-primary-foreground"
               >
-                🧠 Ask NestorTheInvestor
+                Ask NestorTheInvestor
               </button>
-
-              {showQuestions && (
-                <InlineNestorQuestions
-                  questions={questions}
-                  onSelect={handleQuestionSelect}
-                  anchorRef={askButtonRef}
-                />
-              )}
 
               <button
                 onClick={() => navigate("/invest")}
-                className={`w-full py-4 bg-secondary text-foreground rounded-xl text-base font-semibold border border-primary/30 transition-opacity duration-300 ${showQuestions ? "opacity-20 pointer-events-none" : ""}`}
+                className="w-full py-4 bg-secondary text-foreground rounded-xl text-base font-semibold border border-primary/30"
               >
                 Invest
               </button>

@@ -4,7 +4,6 @@ import { Plus, Snowflake, Settings, Eye, EyeOff, Copy } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
-import InlineNestorQuestions from "@/components/InlineNestorQuestions";
 
 const userProfile = {
   name: "Carlos Martínez",
@@ -102,21 +101,17 @@ const CardsScreen = () => {
   const [activeCard, setActiveCard] = useState(0);
   const [showNumber, setShowNumber] = useState(false);
   const [insightTarget, setInsightTarget] = useState<string | null>(null);
-  const [activeQuestion, setActiveQuestion] = useState<{ context: string; questions: { label: string; question: string }[] } | null>(null);
+  const [activeQuestion, setActiveQuestion] = useState<{ context: string; questions: { label: string; question: string }[]; selected: { label: string; question: string } } | null>(null);
   const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const spendingRef = useRef<HTMLButtonElement>(null);
 
   const handleBoxClick = (target: string) => {
-    if (isNestorMode) {
-      setInsightTarget((prev) => (prev === target ? null : target));
-    }
-  };
-
-  const handleQuestionSelect = (q: { label: string; question: string }) => {
-    if (insightTarget && insightData[insightTarget]) {
+    if (isNestorMode && insightData[target]) {
+      const data = insightData[target];
       setActiveQuestion({
-        context: insightData[insightTarget].context,
-        questions: insightData[insightTarget].questions,
+        context: data.context,
+        questions: data.questions,
+        selected: data.questions[0],
       });
     }
   };
@@ -171,13 +166,6 @@ const CardsScreen = () => {
                       <p className="text-xl font-bold">{card.balance}</p>
                     </div>
                   </button>
-                  {isSelected && (
-                    <InlineNestorQuestions
-                      questions={insightData[targetKey].questions}
-                      onSelect={handleQuestionSelect}
-                      anchorRef={{ current: cardRefs.current[i] }}
-                    />
-                  )}
                 </div>
               );
             })}
@@ -223,9 +211,6 @@ const CardsScreen = () => {
                 <div className="h-full bg-primary rounded-full" style={{ width: "56%" }} />
               </div>
             </button>
-            {insightTarget === "spending" && (
-              <InlineNestorQuestions questions={insightData["spending"].questions} onSelect={handleQuestionSelect} anchorRef={spendingRef} />
-            )}
           </div>
 
           {/* Recent activity */}
@@ -252,6 +237,7 @@ const CardsScreen = () => {
         <NestorInsightPanel
           context={activeQuestion.context}
           questions={activeQuestion.questions}
+          initialQuestion={activeQuestion.selected}
           onClose={() => { setActiveQuestion(null); setInsightTarget(null); }}
           onNavigate={(route) => { setActiveQuestion(null); setInsightTarget(null); navigate(route); }}
         />
