@@ -74,12 +74,11 @@ const HomeScreen = () => {
 
           {/* Main account card - accessible in Nestor mode */}
           <div className="relative mb-6">
-            <NestorBeaver visible={isNestorMode} />
             <button
               onClick={() => handleBoxClick("main-account")}
-              className={`w-full text-left bg-primary/15 border rounded-2xl p-5 transition-all relative z-[1] ${
+              className={`w-full text-left bg-primary/15 border rounded-2xl p-5 transition-all ${
                 isNestorMode
-                  ? "border-2 border-primary/60 hover:border-primary cursor-pointer"
+                  ? "border-2 border-primary/60 hover:border-primary cursor-pointer pb-6"
                   : "border-primary/30"
               }`}
             >
@@ -96,36 +95,45 @@ const HomeScreen = () => {
                 <p className="text-xs text-muted-foreground">Personal</p>
                 {isNestorMode && <HealthHeart score={78} />}
               </div>
-              <p className="text-3xl font-bold text-foreground">15,908.00 €</p>
+              <p className="text-3xl font-bold text-foreground mb-1">15,908.00 €</p>
+
+              {/* Nestor beaver inside the card */}
+              {isNestorMode && (
+                <div className="mt-4 pt-4 border-t border-primary/20">
+                  <NestorBeaver visible score={78} />
+                </div>
+              )}
             </button>
           </div>
 
-          {/* Quick actions - dimmed in Nestor mode */}
-          <div className={`flex justify-between px-2 mb-8 ${isNestorMode ? "opacity-30 pointer-events-none" : ""}`}>
-            {[
-              { icon: <Plus className="w-5 h-5" />, label: "Add money", outlined: true },
-              { icon: <ArrowRight className="w-5 h-5" />, label: "Send money", filled: true },
-              { icon: <CalendarDays className="w-5 h-5" />, label: "Scheduled" },
-              { icon: <Lightbulb className="w-5 h-5" />, label: "Insights" },
-            ].map((action) => (
-              <div key={action.label} className="flex flex-col items-center gap-2">
-                <div
-                  className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                    action.filled
-                      ? "bg-primary text-primary-foreground"
-                      : action.outlined
-                        ? "border-2 border-primary text-primary"
-                        : "border border-border text-foreground"
-                  }`}
-                >
-                  {action.icon}
+          {/* Quick actions - hidden in Nestor mode */}
+          {!isNestorMode && (
+            <div className="flex justify-between px-2 mb-8">
+              {[
+                { icon: <Plus className="w-5 h-5" />, label: "Add money", outlined: true },
+                { icon: <ArrowRight className="w-5 h-5" />, label: "Send money", filled: true },
+                { icon: <CalendarDays className="w-5 h-5" />, label: "Scheduled" },
+                { icon: <Lightbulb className="w-5 h-5" />, label: "Insights" },
+              ].map((action) => (
+                <div key={action.label} className="flex flex-col items-center gap-2">
+                  <div
+                    className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                      action.filled
+                        ? "bg-primary text-primary-foreground"
+                        : action.outlined
+                          ? "border-2 border-primary text-primary"
+                          : "border border-border text-foreground"
+                    }`}
+                  >
+                    {action.icon}
+                  </div>
+                  <span className="text-[10px] font-medium text-foreground text-center leading-tight w-16">
+                    {action.label}
+                  </span>
                 </div>
-                <span className="text-[10px] font-medium text-foreground text-center leading-tight w-16">
-                  {action.label}
-                </span>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
           {/* Spending summary - accessible in Nestor mode */}
           <button
