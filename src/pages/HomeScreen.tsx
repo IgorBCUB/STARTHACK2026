@@ -113,12 +113,15 @@ const HomeScreen = () => {
               {isNestorMode &&
               <div className="mt-3 flex items-end gap-0">
                   <img src={nestorDudando} alt="Nestor" className="w-40 h-40 object-contain drop-shadow-lg flex-shrink-0 translate-y-2 -mr-2 relative z-10" />
-                  <div className="relative flex-1 bg-primary/10 rounded-xl p-3 mb-4 ml-2">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); navigate("/portfolio-future"); }}
+                    className="relative flex-1 bg-primary/10 rounded-xl p-3 mb-4 ml-2 text-left hover:bg-primary/20 transition-colors active:scale-[0.97]"
+                  >
                     {/* Speech bubble tail */}
                     <div className="absolute left-[-8px] bottom-4 w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-r-[8px] border-r-primary/10" />
-                    <p className="text-sm font-medium text-foreground leading-snug">Hmm, your portfolio could be better</p>
-                    <p className="text-xs text-muted-foreground mt-1">Your expenses are a bit high, review your subscriptions.</p>
-                  </div>
+                    <p className="text-sm font-medium text-foreground leading-snug">Hmm, tu cartera podría mejorar</p>
+                    <p className="text-xs text-muted-foreground mt-1">Toca aquí para ver el futuro de tus activos →</p>
+                  </button>
                 </div>
               }
             </button>
