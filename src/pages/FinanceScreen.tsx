@@ -66,9 +66,9 @@ const FinanceScreen = () => {
   return (
     <div className="min-h-screen bg-background flex justify-center">
       <div className="w-full max-w-[430px] min-h-screen bg-background flex flex-col">
-        <div className="px-5 pt-14 pb-2 relative">
+        <div className="px-5 pt-14 pb-2 relative overflow-visible">
           {isNestorMode && (
-            <div className="absolute -top-2 left-1/2 -translate-x-1/2 animate-slide-down-nestor">
+            <div key="nestor-slide" className="absolute -top-2 left-1/2 -translate-x-1/2 animate-slide-down-nestor z-50">
               <img
                 src={nestorCabeza}
                 alt="Nestor"
