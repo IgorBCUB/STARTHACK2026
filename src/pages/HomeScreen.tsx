@@ -5,6 +5,7 @@ import BottomNav from "@/components/BottomNav";
 import { useNestorMode } from "@/contexts/NestorModeContext";
 import NestorInsightPanel from "@/components/NestorInsightPanel";
 import InlineNestorQuestions from "@/components/InlineNestorQuestions";
+import NestorIntroDialog from "@/components/NestorIntroDialog";
 import nestorDudando from "@/assets/nestor-dudando.png";
 import HealthHeart from "@/components/HealthHeart";
 
@@ -49,6 +50,7 @@ const HomeScreen = () => {
   const { isNestorMode } = useNestorMode();
   const [insightTarget, setInsightTarget] = useState<InsightTarget>(null);
   const [activeQuestion, setActiveQuestion] = useState<{context: string;questions: {label: string;question: string;}[];selected: {label: string;question: string;};} | null>(null);
+  const [nestorIntroOpen, setNestorIntroOpen] = useState(false);
   const mainAccountRef = useRef<HTMLButtonElement>(null);
   const spendingRef = useRef<HTMLButtonElement>(null);
 
@@ -80,6 +82,15 @@ const HomeScreen = () => {
               <Bookmark className="w-5 h-5 text-muted-foreground" />
               <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-[10px] font-bold text-primary-foreground">ND</div>
             </div>
+          </div>
+
+          <div className="flex items-center mb-3">
+            <button
+              onClick={() => setNestorIntroOpen(true)}
+              className="text-xs font-semibold text-primary bg-primary/10 hover:bg-primary/20 px-3 py-1.5 rounded-full transition-colors"
+            >
+              🦫 Soy Nestor! Conóceme
+            </button>
           </div>
 
           {/* Main account card */}
@@ -211,6 +222,7 @@ const HomeScreen = () => {
           onNavigate={(route) => {setActiveQuestion(null);setInsightTarget(null);navigate(route);}} />
 
         }
+        <NestorIntroDialog open={nestorIntroOpen} onOpenChange={setNestorIntroOpen} />
       </div>
     </div>);
 
