@@ -12,6 +12,8 @@ import AssetDetailScreen from "./pages/AssetDetailScreen";
 import InvestPreviewScreen from "./pages/InvestPreviewScreen";
 import CardsScreen from "./pages/CardsScreen";
 import NotFound from "./pages/NotFound";
+import PortfolioFutureScreen from "./pages/PortfolioFutureScreen";
+import AssetFutureDetail from "./pages/AssetFutureDetail";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +32,8 @@ const App = () => (
             <Route path="/asset" element={<AssetDetailScreen />} />
             <Route path="/invest" element={<InvestPreviewScreen />} />
             <Route path="/cards" element={<CardsScreen />} />
+            <Route path="/portfolio-future" element={<PortfolioFutureScreen />} />
+            <Route path="/portfolio-future/:assetId" element={<AssetFutureDetail />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
